@@ -1,0 +1,1778 @@
+% This file was converted to LaTeX by Writer2LaTeX ver. 1.6
+% see http://writer2latex.sourceforge.net for more info
+\documentclass[letterpaper]{article}
+\usepackage[ascii]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb,amsfonts,textcomp}
+\usepackage[T1]{fontenc}
+% For meeting senior design specifications
+\usepackage{parskip}
+\usepackage[english]{babel}
+\usepackage{color}
+\usepackage[top=0in,bottom=1in,left=1in,right=1in,includehead,head=1in,headsep=0.9602in,nofoot]{geometry}
+\usepackage{array}
+\usepackage{hhline}
+\usepackage{hyperref}
+\usepackage{float}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, filecolor=blue, urlcolor=blue}
+\usepackage{graphicx}
+% Footnote rule
+\setlength{\skip\footins}{0.0469in}
+\renewcommand\footnoterule{\vspace*{-0.0071in}\setlength\leftskip{0pt}\setlength\rightskip{0pt plus 1fil}\noindent\textcolor{black}{\rule{0.0\columnwidth}{0.0071in}}\vspace*{0.0398in}}
+\title{}
+\author{}
+\date{}
+
+% Keep our graphics nice and neat
+\graphicspath{{img/}}
+
+% Custom figure macro for quick and easy changes across the document
+%   \ucffig
+%     Param 1: label
+%     Param 2: figure content
+%     Param 3: caption
+\newcommand{\sitfig}[3]{
+\begin{figure}[H]
+\centering
+\makebox[\textwidth][c]{
+#2
+}
+\caption{#3}
+\label{#1}
+\end{figure}
+}
+
+\newcommand{\sitgfx}[4][scale=1.0]{
+\sitfig{#3}{\includegraphics[#1]{#2}}{#4}
+}
+
+\begin{document}
+\clearpage\setcounter{page}{1}{\centering
+\textbf{Reverse Engineering \& Exploitation Trek-through\newline
+by: Owen Flannagan, Ambrose Douglas, Nick Lang, Elan Rasabi}
+\par}
+
+\textbf{1.0 Why do we Reverse?}
+
+\textbf{Reverse Engineering in infoSec, as simply as we can put it, is to take a
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{binary, }}\textbf{which is just }
+
+\textbf{another word for a computer program, and figure out what it's trying to do. You run binaries all the time in day
+to day life - when you run your browser, when you run Microsoft Word, when you check the weather on your phone. Every
+time you run a program or application, a binary file made of 1s and 0s tells your device exactly what it needs to do.
+\newline
+\newline
+If you have written code before, you know that before it can do anything, you have to turn that into a program/binary so
+that you can use it. Before that your code is just a useless file. But what if you want to know what's happening under
+the covers when you use Word, or Chrome, or anything else running on your computer? This is done only by Reverse
+Engineering.  \newline
+\newline
+Let's start up our Kali Linux and write up our own code get a better idea. The Linux terminal allow you to access most
+of the applications in your environment from the command line. For windows users, it is equivalent to the command
+prompt application (cmd). Access your terminal by searching ``Terminator'' in the Activities section of the toolbar
+}or\textbf{ selecting the red icon on the dash that looks like }
+%\sitgfx{width=0.4583in,height=0.4689in}{FINALWORKINGDOCFORMERLYPRECURSOR-img001.png}{fig:abc}{Test caption.}
+\includegraphics[width=0.4583in,height=0.4689in]{FINALWORKINGDOCFORMERLYPRECURSOR-img001.png}
+ \textbf{. Here you should see a window open with your current user and location in the file system.\newline
+}
+
+{\centering
+\textbf{2.0 Programming and Compiling Hello World}
+\par}
+
+{\centering
+\sitgfx[width=6.5in,height=1.778in]{FINALWORKINGDOCFORMERLYPRECURSOR-img002.png}{fig:unk}{TODO CAPTION}
+ \par}
+\textbf{Here you can see my terminal open on the machine name(kali:\~{} root\#), kali, as user root, with \~{} symbol
+letting me know I am in the home directory. Pressing Ctrl+L will clear the screen for me whenever I need.\newline
+}
+
+\textbf{Let's start by writing a simple ``hello world'' program in the C programming language. You can use any text
+editor you like, but I'll use }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{Leafpad }}\textbf{cause it's
+simple.\newline
+Type in terminal:}\textit{ leafpad hello.c\newline
+\ \ }  
+\sitgfx[width=4.8693in,height=3.1602in]{FINALWORKINGDOCFORMERLYPRECURSOR-img003.png}{fig:unk}{TODO CAPTION}
+ \textbf{ }
+
+\textbf{This opens a text editor for me to write my program in. So let's do that. Write it yourself, even if you are not
+good at C I suggest you learn enough to do this so you understand what each line does. Your code should look like
+this:}
+
+\textbf{\newline
+\ \ }  
+\sitgfx[width=4.3854in,height=1.302in]{FINALWORKINGDOCFORMERLYPRECURSOR-img004.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Now let's turn our code into a binary(which will be 32-bit, not 64, for reasons later explained).}
+
+  
+\sitgfx[width=6.5in,height=0.5555in]{FINALWORKINGDOCFORMERLYPRECURSOR-img005.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+Listing (ls) the content in our file location now shows two hello files: \newline
+{}-hello.c: our C source code\newline
+{}-hello\_binary: our binary created from our source file\newline
+\ \ }  
+\sitgfx[width=4.7602in,height=0.6146in]{FINALWORKINGDOCFORMERLYPRECURSOR-img006.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Running (./) hello\_binary achieved our objective, outputting the string we printed}
+
+\textbf{What happens when the }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{compiler}}\textbf{, a program
+that interprets source code and outputs machine code, interprets our source code? Basically, A's and B's go through a
+process and become 1's and 0's that make it possible for your processor (CPU) to understand. In fact, it's a little
+less abstract than simply 1's and 0's. More on that later. }
+
+\textbf{The compiler goes through your source, line by line, and tries to figure out what you meant. It turns your
+source code into }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{instructions}}\textbf{, or specific tasks
+for your CPU to execute. You can't tell your CPU ``x = 5'' so your compiler of choice will tell it a series of
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{instructions }}\textbf{that represent ``x=5''.}
+
+{\centering
+\textbf{2.1 - We don't always get source code with our programs.}
+\par}
+
+\textbf{\newline
+So what would happen if I deleted the source code for hello.c and renamed the binary? Would you have a clue what this
+program even does until running it? And even then, your understanding of this program will be based on just the
+behavior you can see when doing so. It is this fact that allows products like Chrome and Word to be shared to you
+without making it easy for you to figure out EXACTLY how it works and sell your new product based off of this
+information.  But there is still a way see what's inside for those who have the skill. Enter Reverse
+Engineering...\newline
+\newline
+{}-How would we see how it works? The }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{file }}\textbf{command
+gives us some basic information about the file hello\_binary. ELF = Executable and Linkable Format. An .exe on Windows
+is functionally equivalent to an ELF on Linux. The other thing to note on the output of
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{file}}\textbf{ is the phrase ``Intel 80386'' which is the CPU
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{architecture, }}\textbf{aka the physical hardware that this
+program was compiled to run on. More specifically, 32-bit, which refers to the size of the
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{registers }}\textbf{of said CPU(more on those in a bit).}
+
+\textbf{ }  
+\sitgfx[width=6.5in,height=0.6252in]{FINALWORKINGDOCFORMERLYPRECURSOR-img007.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{So that's cool, but what else is in this program? The
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{strings }}\textbf{command lists all of the human-readable
+strings in the binary of length 4 or greater. \newline
+}  
+\sitgfx[width=6.5in,height=3.5138in]{FINALWORKINGDOCFORMERLYPRECURSOR-img008.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+We'll note that there are a lot of strings for such a tiny program! About 3 quarters of the way down, note our string
+``hello world!'' from the source code. The compiler and version we used are a little bit below it. A lot of these
+results are actually just to are left from the compilation process. We used the function ``printf'' which on linux is a
+member of}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{ glibc}}\textbf{ (the standard library for C
+programs on Linux). So, the compiler had to bring in glibc in order to know what we meant by printf, hence all the
+glibc/libc related strings.\newline
+\newline
+\newline
+2.0 Looking at the assembly of a binary}
+
+\textbf{However, this is only scratching the surface of information we can extract from this binary. \newline
+From here you start learning about the two core ways you can go about reverse engineering a program (Static
+Analysis/Dynamic Analysis) and two of the most powerful tools we recommend you use for both (IDA Pro: Static, Radare2:
+Dynamic). These 2 approaches and their associated tools are at the absolute core of Rev/Exploitation, which is why we
+will be hitting these concepts in depth.\newline
+\newline
+2.1 Static Analysis vs Dynamic Analysis\newline
+In the simplest explanation I can think of, Static Analysis will show you all the information about your program that
+can be seen without running it and Dynamic Analysis is everything you can learn about the code by running it and seeing
+how it behaves. For me it helps to understand this using an example with high level code like C. \newline
+\newline
+If someone gave you the C source code to a program and told you to explain to them what it does or you will be fired,
+how would you do that? Logically, I can think of two ways I would go about doing that. One way would be to open up the
+c file, read it step by step and try to get a picture of what it does as a whole. The second way would be to compile
+and run it, see what happens, how it behaves, and maybe connect some dots to get the gist of the program. Now already
+we can tell that each one has its pros and cons. }
+
+\textbf{For option one, the pro would be that we get to see everything the program might do; all the variables,
+functions, and therefore, possible outcomes. You just have to put the work in and take the time to read every line of
+that code. But what if the program is gigantic or if there are changes that happen to the program that will only happen
+once you run it, like one that starts by decrypting itself. This is where option 2 would be necessary. }
+
+{\centering
+\textbf{\newline
+For option two, running the program, we will not as easily be able to view all the inner workings of our program, but it
+often shows us enough information to get a strong understanding in a much quicker time. \newline
+\newline
+Intro to Static Analysis}
+\par}
+
+\textbf{Let's open it in IDA Pro. Open IDA(Type into your terminal }cd \~{} \textbf{then }idademo70/ida )\textbf{ , then
+select our binary when prompted. \newline
+Once IDA finishes loading, it should look like this: }
+
+{\centering   
+\sitgfx[width=5.3957in,height=5.052in]{FINALWORKINGDOCFORMERLYPRECURSOR-img009.png}{fig:unk}{TODO CAPTION}
+ \par}
+\textbf{What does all this crap mean?? At least we can see our string ``}Hello World!\textbf{{}''. \newline
+We're going to take a break from the idea of hello world and dig into some
+}\textbf{\textcolor[rgb]{0.07450981,0.30980393,0.36078432}{assembly.}}\textbf{ The words in the left column are the
+names of }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{instructions.}}\textbf{ For now, ignore everything
+except the following block:}
+
+{\centering
+\textbf{\newline
+\newline
+ }  
+\sitgfx[width=4.8126in,height=1.0209in]{FINALWORKINGDOCFORMERLYPRECURSOR-img010.png}{fig:unk}{TODO CAPTION}
+ 
+\par}
+
+\textbf{Let's start at the ``call'' instruction and work backwards. You might be able to guess what the functionality of
+this is after we google for what ``puts'' does.\newline
+\newline
+}\textit{Function: int puts (const char *s)}
+
+\textit{The puts function writes the string s to the stream stdout followed by a newline. The terminating null character
+of the string is not written. (Note that fputs does not write a newline as this function does.)}
+
+\textit{puts is the most convenient function for printing simple messages. \newline
+For example:puts ({\textquotedbl}This is a message.{\textquotedbl});}
+
+\textit{outputs the text `This is a message.' followed by a newline.\newline
+\newline
+}\textbf{So, we can be pretty confident that ``}call puts'' \textbf{...calls puts. But puts takes an argument! Puts
+takes a pointer to a char (this is how strings are denoted in C
+}\url{https://en.wikipedia.org/wiki/Null-terminated_string}\textbf{ .) If we recall our programming 2 pointers, we know
+that pointers point to memory locations(}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{addresses}}\textbf{)
+where the actual value can be found. \newline
+The instruction on the same line as our string, }{}``lea''\textbf{ has the format lea operand1, operand2. ``LEA'' stands
+for ``Load Effective }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{Address}}\textbf{{}'' and puts the
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{address}}\textbf{ of operand2 into operand1. (Nearly every
+x86 instruction has the format }instruction operand1, operand2. \textbf{Usually it's referred to as }destination,
+source\textbf{ instead of }operand1, operand2.)\textbf{  \newline
+So with all of this in mind, we can be fairly confident that a pointer to the string ``Hello World!'' is getting stored
+in operand1, which is }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{edx}}\textbf{.
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{Edx }}\textbf{is a
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{register}}\textbf{. The CPU has a lot of registers, and
+registers are small bits of fast storage located on the physical CPU. If you remember from earlier, this program is a
+32-bit executable which runs on a CPU with 32-bit registers! Nearly every CPU instruction has a register involved.}
+
+{\centering
+  
+\sitgfx[width=1.9583in,height=1.8752in]{FINALWORKINGDOCFORMERLYPRECURSOR-img011.png}{fig:unk}{TODO CAPTION}
+ \par}
+\textbf{So we know that a pointer to (the address of) our string gets put into edx and that puts gets called. And when
+we run the program, we know that ``hello world!'' gets printed. That encapsulates the functionality of our hello world
+program. }
+
+\textbf{3.0 Analyzing logmein lvl1(aka log) }
+
+\textbf{Now that we're a little familiar with the basics, let's look at something a little
+}\textbf{\textit{harder}}\textbf{. This program came from the wild (}\textbf{\textcolor{red}{or a CTF maybe)}}\textbf{
+and we don't know anything about it besides the name - log. What can we do to figure it out?From your terminal, cd to
+Desktop/rev\_be101/binaries by issuing the command }cd Desktop/rev\_be101/binaries\textbf{.
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{File }}\textbf{says its a 32-bit executable for linux, and
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{strings }}\textbf{has some interesting output. Do these on
+your own. \newline
+\newline
+Now let's open it in IDA. Type into your terminal }cd \~{} \textbf{then }idademo70/ida -\textbf{you can use the Tab key
+to autocomplete. Once IDA gets open, agree to the license agreement and then choose to open a new file. Navigate to
+Desktop/rev\_be101/binaries and open our file }log. \textbf{We'll land in }\textbf{\textit{main }}\textbf{ {}- if for
+some reason you navigate away from this screen, double click ``main'' on the functions screen. If your graph view turns
+funky, try pressing the spacebar to get back to the graph.}  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=3.2638in]{FINALWORKINGDOCFORMERLYPRECURSOR-img012.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Let's scroll down a bit with the arrow keys or mouse drag (about 2 boxes, to the circled portion) until we see
+this:  }
+
+  
+\sitgfx[width=6.5in,height=3.4862in]{FINALWORKINGDOCFORMERLYPRECURSOR-img013.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{From this one screenshot we }\textbf{\textit{can}}\textbf{ see pretty much the entire functionality of this
+program, without even having had to run it!!! That is, if we look closely and can read assembly. Let's direct our focus
+to the ``call'' instructions. If you click once on the word ``call'' IDA will highlight all of the appearances for you.
+Take a look at your own IDA and think about what this all represents. It's okay if you're mostly lost! Once again,
+keeping up with the theme of }\textbf{\textit{reverse}}\textbf{, we're going to be working backwards. \newline
+\newline
+We can see a few ``call'' instructions. The first code block should look somewhat familiar from the hello\_world
+example, except instead of edx and puts, it's eax and printf. Go back and look at that again if you don't remember what
+that looked like.}
+
+  
+\sitgfx[width=6.5in,height=4.611in]{FINALWORKINGDOCFORMERLYPRECURSOR-img014.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+The second call is to scanf, another familiar function from C. We see that \%s gets put into eax and pushed before scanf
+gets called. Before that, a }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{local variable
+}}\textbf{(var\_30) gets put into eax and pushed. Notice how ``push eax'' happens right before(sometimes multiple
+times) each call in the above screenshot? The address of a string gets put into eax and then pushed before printf, then
+the addresses of a local variable and another string (the format string ``\%s'') gets put into eax and then pushed, and
+finally the addresses of two }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{local variables }}\textbf{get
+put into eax before getting pushed before check\_password gets called. If you guessed that these values that get pushed
+are the arguments for these functions, you'd be right. And we know all without ever running the program! Let's go ahead
+and run the program now with our newfound knowledge and see what happens. (ctrl+c exits the currently running
+program)\newline
+}  
+\sitgfx[width=6.5in,height=1.139in]{FINALWORKINGDOCFORMERLYPRECURSOR-img015.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Do you see where printf and scanf come into play? And can you see where check\_password happens? Please go back
+to IDA. At the end of the code block with the ``incorrect. Try again:'' message, there is an arrow that goes back up to
+the block containing check\_password(). This is indicative of a loop, as we saw when we ran the program. The program
+prompts for input, checks it, and if it's wrong, says ``Incorrect. Try Again:'' and waits for more input.  }  [Warning:
+Image ignored] % Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=3.028in]{FINALWORKINGDOCFORMERLYPRECURSOR-img016.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+Feel free to keep running the binary and trying to guess the password. We're going to find it ourselves. But first, some
+more assembly. \newline
+}
+
+\clearpage{\centering
+\textbf{Let's take a look at the last two instructions of the block containing check\_password. There's }\textit{test
+eax,eax}\textbf{\textit{ }}\textbf{and} \textit{jz short loc\_5C1}\textbf{. The }\textbf{\textit{test
+}}\textbf{instruction (for our purposes) checks if operand1 + operand2=0 by performing a bitwise AND on operand1 and
+operand2. If they are, it sets the Zero Flag to 1. Otherwise, it sets the Zero Flag to 0. The Zero Flag is part of the
+EFLAGS register, specifically the ZF bit. So the next instruction, jz(jump if Zero Flag is set to 1), checks the Zero
+Flag, and if it's set to 1, it takes the green path. If it's set to 0, it takes the red path. Because the last function
+called before these instructions was check\_password, we can assume that check\_password stores its result in eax. So
+if check\_password returns 1, we take the red path(win). If it returns 0, we take the green path(lose/try again). Even
+though we haven't even figured out how to win, we know so much about the program! \newline
+}  
+\sitgfx[width=6.4583in,height=4.5728in]{FINALWORKINGDOCFORMERLYPRECURSOR-img017.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+Now let's get into the meat of the program. Double-click on the word check\_password on the graph, or double click on it
+from the functions window (it's right below main). Take a minute or two to familiarize yourself with the structure of
+the function, and recall everything we know about what happens with this function. We just figured out that if
+check\_password returns 0, we lose and try again, and if it returns 1, we win! Let's start at the very end of the
+function, the win and lose conditions, and work our way back. }  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=3.8055in]{FINALWORKINGDOCFORMERLYPRECURSOR-img018.png}{fig:unk}{TODO CAPTION}
+ 
+\par}
+
+\textbf{Let's look at the code block circled. We know that the function check\_password returns its value in eax, since
+the }\textbf{\textit{test}}\textbf{ instruction from before was }\textbf{\textit{test}}\textbf{ing eax,eax. We get more
+proof of that now, where eax is the last register to be modified before the retn (return) instruction. It appears we've
+found the }\textbf{\textit{lose/try again}}\textbf{ condition! We can see that the top block circled ``mov''{}'s(the
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{mov}}\textbf{ instruction copies operand2 into operand1) 0
+into [ebp+var\_8] which is the location of a local variable. The next block of code }mov's\textbf{ that same
+[ebp+var\_8] into eax, before returning. So, we can safely assume that [ebp+var\_8] is the location of the return
+value.\newline
+}(In Intel x86 assembly notation, the brackets [] denote the memory contents at a specific address. This is important
+because \textit{ebp} stands for \textit{base pointer} - it points to the \textit{base address} of The
+\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{Stack}. So [ebp +var\_8] is the compiler's way of telling the CPU
+``[go to this memory address and get whatever is there.]'')
+
+\textbf{So now we know how to lose. Can we find how to win? If we continue working backwards from the return point, we
+see that red arrow that also points to the return block. Double click it or follow it back up.}
+
+{\centering   
+\sitgfx[width=3.1146in,height=4.4272in]{FINALWORKINGDOCFORMERLYPRECURSOR-img019.png}{fig:unk}{TODO CAPTION}
+ \par}
+\textbf{The light blue arrow is the same one previously mentioned. Could it be the win condition?? Let's take a closer
+look at the code block above it.}
+
+{\centering   
+\sitgfx[width=4.6354in,height=1.5in]{FINALWORKINGDOCFORMERLYPRECURSOR-img020.png}{fig:unk}{TODO CAPTION}
+\par}
+\textbf{We see some old friends, and some new ones. This }\textbf{\textit{test}}\textbf{ instruction looks kind of
+familiar but also kind of wrong! }  
+\sitgfx[width=6.5in,height=4.8752in]{FINALWORKINGDOCFORMERLYPRECURSOR-img021.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{It appears AL is the lowest 8 bits of the EAX register. So }\textit{test} al, al\textbf{ is really
+}\textit{test} the lowest 8 bits of eax, the lowest 8 bits of eax\textbf{! But what could be in eax at this point in
+the program? Do you have any guesses? Recall that when we ran the program on our command line, it asked for input and
+told us that we were wrong. We know how to be wrong, but how can we be right? This function compares our input string
+to another that is located somewhere in the program. We could continue statically analyzing the function and we would
+find the location of the victory string, but we would never be able to determine exactly what the password is. For
+this, we turn to dynamic analysis. We'll be using a tool called radare2, a combined disassembler and debugger. } 
+
+\sitgfx[width=6.5in,height=4.3335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img022.png}{fig:unk}{TODO CAPTION}
+ \textbf{To open this file in debug mode in radare2, type `}r2 -d log'\textbf{, then after it gets open, `}aaa'\textbf{
+and then `}afl\textbf{{}'. Aaa tells r2 to analyze all functions, and afl tells it to list the analyzed functions.}
+
+  
+\sitgfx[width=6.5in,height=4.1807in]{FINALWORKINGDOCFORMERLYPRECURSOR-img023.png}{fig:unk}{TODO CAPTION}
+ 
+
+  
+\sitgfx[width=6.5in,height=4.9028in]{FINALWORKINGDOCFORMERLYPRECURSOR-img024.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+We see some old and tired friends! Type `}s main' \textbf{to instruct r2 to seek to main, then `}db main' \textbf{and
+`}dc\textbf{{}' to instruct radare to set a breakpoint at main and then continue until the breakpoint.}
+
+\textbf{Now type ``V'' then enter to open visual mode}
+
+  
+\sitgfx[width=6.5in,height=4.2362in]{FINALWORKINGDOCFORMERLYPRECURSOR-img025.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{The first visual mode is a basic hexdump of the binary. This can be useful at times but we will go for a
+different view for now. type ``p'' twice without hitting enter. Anything look familiar? It's the same disassembly from
+IDA, just now in radare's format with some bonus info.}
+
+  
+\sitgfx[width=6.5in,height=4.7362in]{FINALWORKINGDOCFORMERLYPRECURSOR-img026.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{This may be a little bit to take in if this is completely new to you so take a deep breath, but don't worry.
+It's not so bad. Now, you can see a view of the instructions in memory that are going to be executed at the bottom of
+the display. The rows of 0x00000000's with labels are the
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{registers }}\textbf{of the computer and at the top of the
+screen is a view of the }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{stack}}\textbf{.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img027.png}{fig:unk}{TODO CAPTION}
+\textcolor{red}{***** Don't know much about how a Stack works? Read below. If you are well informed, skip
+this*****}\newline
+\textbf{The Stack}
+
+\textbf{The stack is a programming structure in memory that works as a first in, last out queue. Items as ``pushed'' on
+the stack in a certain order and then ``popped'' off in the reverse order. So, for example, say my stack starts out
+with a 1.}
+
+\textbf{0x0010: 1}
+
+\textbf{and then I push a two(2) and then a three(3) onto the stack \newline
+in that order - push 2 \newline
+\ \   {}- push 3}
+
+\textbf{0x0008: 3\newline
+0x0009: 2\newline
+0x0010: 1}
+
+\textbf{Now If I were to pop something off the stack, I would first get a three (since it is on top of the stack) and
+the stack would then look like}
+
+\textbf{0x0009: 2\newline
+0x0010: 1}
+
+\textbf{Inside of your computer, the stack works the same way. The numbers pushed and popped off the stack of a 64 bit
+computer can be variables, memory addresses, and other data and will look more like 0x00007f11e8a9bf2a (a memory
+address) or 0x656b6f4456964f (A piece of inputted user data) This process is referred to as changing the stack frame.}
+
+\textbf{One caveat of the stack is that in computer memory it grows upward toward }\textbf{\textit{lower memory
+addresses}}\textbf{ so when you push numbers onto the stack the value of the topmost data on the stack is at the lowest
+memory address:}
+
+\textbf{0x0008: Topmost value on stack is at lowest address (0x0008)\newline
+0x0009:\newline
+0x0010: lowest value of stack is at the highest address (0x0010)}
+
+\textcolor{red}{******************END OPTIONAL STACK EXPLANATION HERE****************************}
+
+\textbf{For those new to assembly, registers are like variables for assembly. You can move data into and out of
+registers (mov eax, 6)and use them to push and pop data to and from the stack (pop rax). Several registers have special
+purposes. }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{eip}}\textbf{ is used to point to the next assembly
+instruction the computer is going to execute in memory. Right now, assuming you typed }s main\textbf{, }db
+main\textbf{,and }dc\textbf{ above, }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{eip}}\textbf{
+is0x565d054d.}\textbf{\textcolor{red}{ }}\textbf{(The IP of EIP stands for Instruction Pointer.)}
+
+\textbf{\textcolor{red}{ }}\textbf{If we look at the code at the bottom panel we see this agrees with the topmost
+instruction in memory.}
+
+  
+\sitgfx[width=6.5in,height=5.6665in]{FINALWORKINGDOCFORMERLYPRECURSOR-img028.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{The register esp is used to point to the top of the stack. As you can see, the address in esp is 0xffd3008c
+which agrees with the highest stack address in the top view.}
+
+  
+\sitgfx[width=6.5in,height=5.1252in]{FINALWORKINGDOCFORMERLYPRECURSOR-img029.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{main is the execution starting point of programs written in c and c++ for command line. the ``db'' command sets
+a breakpoint inside the code of the program. So by typing ``db main'' you set a breakpoint at the beginning of the main
+function, which is the start of the program. (Radare2 actually starts a program and breaks before the main function or
+the program starts.) Other functions can be used the same way. For example if a program had a function in it called
+sayHello() then ``db sayHello'' would put a breakpoint at the beginning of that function. You can enter offsets into
+the ``db'' command as well. You can type ``db main+1'' to set a breakpoint at the second instruction of the main
+function. The ``dc'' command stands for debug continue, and runs the program until another breakpoint is hit.
+Breakpoints can also be set by using the up and down keys(in visual mode) to look through memory and then hitting shift
++ b to place a breakpoint at the highest instruction in the display. (You cannot use this when the tab for command
+execution is open at the bottom of the screen. hitting enter without typing any command will get rid of the tab.)
+Hitting shift + b again will remove the breakpoint. or using a minus (-) in the ``db'' command. For example ``db
+-main'' will remove the breakpoint at the start of main.}
+
+\textbf{Press the `}:\textbf{{}' character while in Visual Mode to bring up the command entry. Let's set a breakpoint on
+the call to check\_password by bringing up command entry with :, then typing }db sym.check\_password \textbf{(you can
+use tab to autocomplete here as well).  If you run ``dc'' now, you will see the execution of the program. First,
+``Please enter a word or character:'' is printed to the screen}  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=5.3335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img030.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{I gave it the word ``asdf''. I pressed enter after typing asdf just like when we ran the program before, and I
+get the message hit breakpoint at: 565d0625. Press enter to return to visual mode. Did you notice the change? Instead
+of being in }main\textbf{ we're now in }sym.check\_password\textbf{! }  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=5.2083in]{FINALWORKINGDOCFORMERLYPRECURSOR-img031.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{There are some other things to note here as well. In the stack view(top block) , at the very end of the visible
+stack, we see our input string! Asdf! ...and there's another suspicious string in the stack view too. Let's set a
+breakpoint after the program initializes its local variables (}:, \textbf{then }db 0x5664a63c, \textbf{then press
+enter- pro tip- select the memory address with your mouse and middle click it to copy and paste in one click!). Then,
+press }: \textbf{and type }dc \textbf{then press enter to continue to the next breakpoint. R2 should tell you ``hit
+breakpoint at }0x5664a63c.\textbf{{}'' }  
+\sitgfx[width=6.5in,height=5in]{FINALWORKINGDOCFORMERLYPRECURSOR-img032.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Let's get debugging. Press ``s'' to single step through the program. You will notice the highlighted memory
+address will move down to the jmp instruction. Press ``s'' again and we will end up in a block of familiar code!} 
+
+\sitgfx[width=6.5in,height=3.778in]{FINALWORKINGDOCFORMERLYPRECURSOR-img033.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Let's take a step away from the flow of the program to examine the values in the registers. Before we execute
+any of this block, we see that there are some values currently stored in eax and edx, but  they don't really have a lot
+of meaning to us at this moment. Press ``s'' twice so that the highlighted instruction is: \newline
+}0x565cf672  \ \ 01d0  \ \ add eax, edx\newline
+  
+\sitgfx[width=6.5in,height=1.4445in]{FINALWORKINGDOCFORMERLYPRECURSOR-img034.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{We see that both edx and eax have new values! Edx got 0x000000000 (aka 0) and eax got 0xffb57da8! What the heck
+is 0xffb56da8?? It looks kind of like the esp..but remember in hexadecimal we count 8,9,a,b,c,d,e,f. And the base
+pointer (the bottom of the stack) is 0xffb57d}\textbf{\textcolor{red}{68}}\textbf{...so this memory address is below
+the stack for this function. \newline
+We can get the data at this memory address by pressing `:' and issuing the command ``}pxw 40 @ eax'' \textbf{or ``}pxw
+40 @0xffb57da8''\textbf{. They're the same thing, since eax = 0xffb57da8. This is similar to how the brackets [] work
+in x86 assembly. When we type }pxw \_nbytes\_ @ memory \textbf{, it's just like saying ``get nbytes from [memory].''We
+see our input string that we entered when the program was in main!!!!  Let's keep going.}\newline
+   
+\sitgfx[width=6.5in,height=1.389in]{FINALWORKINGDOCFORMERLYPRECURSOR-img035.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Press ``s'' 2 more times so that the highlighted instruction is  \ \ }
+
+0x565cf677\ \ 84c0  \ \ test al, al
+
+  
+\sitgfx[width=6.5in,height=2.5138in]{FINALWORKINGDOCFORMERLYPRECURSOR-img036.png}{fig:unk}{TODO CAPTION}
+\textbf{The first time we pressed s just now, nothing changed. It added edx to eax, which was adding 0 to a number, no
+effect. The next instruction is more interesting. Wise persons might recognize, even without knowing what the movzx
+instruction does, that eax contains the hex representation of an ASCII value. Some quick googling reveals that eax now
+contains the ASCII representation of the letter ``a'', Hx 61 in the chart. We even reverse engineered the functionality
+of }  
+\sitgfx[width=6.3543in,height=0.2291in]{FINALWORKINGDOCFORMERLYPRECURSOR-img037.png}{fig:unk}{TODO CAPTION}
+ !\newline
+\textbf{We figured out that it moves 1 byte (the size of a char in C) from operand2 into operand1.  More specifically,
+in this instance it moves a byte from the address that eax currently holds ([}0xffb57da8] = asdf = 0x66647361\textbf{)
+and puts it into eax. Let's keep going. Press ``s'' through the test and jump instructions(2x) ,and then 3 more times
+so we're looking at this screen.}  
+\sitgfx[width=6.5in,height=1.8335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img038.png}{fig:unk}{TODO CAPTION}
+ 
+
+\begin{center}
+ 
+  \sitgfx[width=1.6043in,height=4.9272in]{FINALWORKINGDOCFORMERLYPRECURSOR-img039.png}{fig:unk}{TODO CAPTION}
+
+\end{center}
+\textbf{We see the same functionality from the last block we analyzed, albeit with some more instructions. This time, it
+movzx's a byte (char) from our input string into edx, instead of eax. Step through this instruction and verify for
+yourself.\newline
+Cool. Let's keep stepping to try to figure out what happens next. It moves a local variable, the same ones from before,
+4h, which we know is 0, into ecx. Verify that as well. The next instruction is juicy. One of the function arguments
+gets moved into eax! Let's do} : \textbf{then }pxw 50 @ eax.   
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=4.5138in]{FINALWORKINGDOCFORMERLYPRECURSOR-img040.png}{fig:unk}{TODO CAPTION}
+ 
+
+\begin{center}
+ 
+  \sitgfx[width=1.8543in,height=0.2189in]{FINALWORKINGDOCFORMERLYPRECURSOR-img041.png}{fig:unk}{TODO CAPTION}
+
+\end{center}
+\textbf{EAX now holds the memory address of (a pointer to) a string that we did not enter!! So EDX holds the address of
+our input string and EAX holds a foreign string. What happens next?After a useless }add eax,ecx\textbf{, our new friend
+movzx moves a byte(character) from the string pointed to by eax into eax! }  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=2.0555in]{FINALWORKINGDOCFORMERLYPRECURSOR-img042.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{So now we have our 0x61 (lowercase A) in edx, and 0x55 (capital U) in eax. Can you guess what the next
+instruction, }cmp dl, al \textbf{does? If your answer was }  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=1.8055in]{FINALWORKINGDOCFORMERLYPRECURSOR-img043.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{You'd be correct! The cmp instruction sets the Zero Flag to 1 only if the two operands are equal. So, if the
+character of the input string, `a' and the character of the password string, U, are the same, then we get to take the
+jump. Feel free to keep stepping through the program and repeating our commands, but I think we've done enough
+reversing on this binary. Let's run it again, this time giving it what we think the password is. In r2, press q to
+return to the r2 console and then type qy to quit radare2. Run log (./log) and give it the password!! }  [Warning:
+Image ignored] % Unhandled or unsupported graphics:
+\sitgfx[width=6.4165in,height=1.3126in]{FINALWORKINGDOCFORMERLYPRECURSOR-img044.png}{fig:unk}{TODO CAPTION}
+\url{https://www.youtube.com/watch?v=5pZa8YobAeg}
+
+{\centering
+\textbf{Reverse Engineering -- Static Analysis Walkthrough}
+\par}
+
+\textbf{Static analysis is done to help you understand how the program should function before running it. The purpose of
+static analysis is to use the program flow and the assembly code to understand how the program should run and how to
+find out which sections are important and should be further analyzed. This is important because some programs use many
+jumps and blocks of code, and it is important to see how the program flows before jumping into debugging. On top of
+this, static analysis does not require a run-time environment, so it can be done from any machine. I use my faster Mac
+host instead of my boxes, but any operating system will work!}
+
+\textbf{To start, we will be statically analyzing a binary using a tool called IDA. IDA is seen as an industry standard
+for static analysis because it has tons of useful plugins, many different features, and even the ability to script with
+Python. However, this is why the professional version costs a few hundred thousand dollars. We will only be using some
+of the more simple and useful features for this tutorial, and all of these can be found in the free IDA demo that is
+provided.}
+
+\textbf{The program that we are analyzing is called
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{example}}\textbf{, and we plan on discovering what this
+program does. It was written in C and compiled with GCC with the m32 flag, for compatibility on 32 bit machines. Rather
+than showing you the C code that was used, we will use the program flow to determine the C code from the assembly
+language.}
+
+\textbf{To open a file in IDA, we will launch IDA. You will see a screen asking whether you would like to disassemble a
+new file, work on your own, or load a previous disassembly. This is your first time disassembling this file, so you
+will click the box that says ``New''. It will then present a box of options that affirms the format of the 32 bit ELF
+file. Make sure that IDA will auto-comment, and select ``OK'' to proceed. After some loading as IDA evaluates the
+program, you should get a screen that looks like the following:}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img045.png}{fig:unk}{TODO CAPTION}
+ \textbf{This is the graph mode of IDA, and it presents the functions as series of connected boxes presented as jumps.
+The other main view of IDA is known as the text view, and it presents all of the information as it is loaded into RAM.
+This is more confusing to read and involves the format of the ELF file and all of it's sections, so we will start by
+using Graph view. If you are not already in this view, press the spacebar to switch between these two main views.}
+
+\textbf{In this view, there are a few key features to look at for this program. On the left, there is an area for the
+functions, known as the ``functions window''. In this, all of the functions that are used in the binary can be seen.
+However, the majority of them are functions used by GCC and by the stdio.h file that is imported. This can be
+determined by the functions with the purple shade, like \_strcmp, \_gets, \_puts, \_strlen, and libc\_start\_main.}
+
+\textbf{It is important to determine which functions are used because they can indicate how the program works. In this
+case, we can guess that two strings are compared due to the strcmp method, and that we will give input with gets and
+see output with puts. The strlen could be used to find the length of a string that we enter or a string that is
+hardcoded in memory. All of the other functions that are used take a part in making sure that the ELF can run
+independently, and they help link all of the parts of the file and libraries together in virtual memory. This is a
+complicated process, but luckily these functions don't affect the flow of the program that we can affect.}
+
+\textbf{On top of this, it is always helpful to look at the strings that can be found in the program before we analyze
+further. IDA can look for areas in memory in which a series of consecutive memory falls into the printable range of
+ASCII. In other words, it looks through the whole file for strings of words and numbers that may end up being printed
+on the screen or used in various functions. To open this view, click on ``Views'' in the toolbar, then ``Open
+subviews'' and ``Strings''. The keyboard shortcut for the strings subview is Shift-F12. Once you open the strings
+subview, you should see the following screen:}
+
+  
+\sitgfx[width=6.1252in,height=3.8335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img046.png}{fig:unk}{TODO CAPTION}
+ \textbf{Most of these strings are function names, and they are linked to the libc functions that we import in the
+stdio.h file that I previously mentioned. These all have an address that begins with LOAD, as can be seen. This means
+that they are used when the program loads libc and imports the functions and references that will be used. After these,
+there are 5 strings that stand out. The last string is stored in the eh\_frame, as can be seen in its address, and it
+comes from the exception handling part of the ELF file, so it is not relevant in the execution that we can see. By now,
+you can probably see that ELF files and other executables are way more complicated than they seem in the C code that is
+used to create them, and IDA shows all of the sections used by the compiler to make sure that this code can run in the
+computer and load into its RAM properly. It's a very intricate and entertaining process, but it is usually not too
+important when reverse engineering. I would not recommend affecting any of this data because it could destroy the
+program, for all practical purposes.}
+
+\textbf{Now let's look at the 5 strings that seem interesting. The first says, ``If you managed to get here, you used an
+exploit!'' That sounds like a place in the program that is not meant to be reached and can only be reached with an
+exploit, but we are not focused on exploitation yet. I will reference that later in this tutorial, after understanding
+the basic flow and how to reverse engineer the program in the way that it is supposed to function. The second string
+says, ``Please enter the password:''. This seems like a prompt that would be printed before we give input. The third
+strings says, ``itisnotthiseasy''. That one seems confusing, but it may be useful. The fourth string says, ``Correct!''
+We can assume that this is the part of the program that we would like to reach, because you may assume that this
+relates to the password that it asks us to enter. The fifth string seems like the other possibility, as it states,
+``Mission failed, we'll get them next time''. You may have noticed that all of these have addresses that begin with
+``.rodata'', which stands for ``read only data.'' This means that these strings can only be read by the program, and
+they are located in an area of memory that cannot be written to or executed. Now, it is time to check out the flow!}
+
+\textbf{Click on ``IDA View-A'' in the list of tabs to go back to the graph view. Now we will read through the graph and
+attempt to understand what the program should do. Starting from the top box, a few definitions are created for you by
+IDA. The local variables and labelled ``var\_10'' and ``var\_C''. These variables are created and used inside of this
+function. They are stored in lower memory addresses than EBP, so IDA can recognize that a repeated negative offset from
+EBP indicates a local variable in memory. The arguments are labelled ``argc'', ``argv'', and ``envp'', and they have
+positive offsets from EBP. You may recognize these because they are commonly referred to in C programs where the main
+function has command line arguments. However, you can look through the graph to find out where any of these arguments
+are referenced, and it can be seen that they are only declared and never used. On top of this, ``s'' is defined, and
+IDA commonly uses the offset ``s'' to refer to strings. In the first block everything up to ``lea'' is used to set up
+the stack and position the memory, so this can be better analyzed in dynamic analysis. }  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.4583in,height=2.4791in]{FINALWORKINGDOCFORMERLYPRECURSOR-img047.png}{fig:unk}{TODO CAPTION}
+ \textbf{Once we reach the lea, knowledge of x86 assembly language becomes incredibly important. I always try to keep a
+reference manual at hand in case I do not recognize an instruction, but Google often turns out to be the biggest help.
+Lea stands for ``load effective address'', so it pretty much functions as a way to store a pointer. In this case, the
+pointer for some offset of register ebx is stored in register eax, and luckily IDA simplified life by displaying the
+string that is at that section of data. The pointer to this string is stored in register eax, and the next instruction
+``push''es this pointer onto the stack. After this, the ``puts'' call is performed, in which the puts function of the
+stdio.h library is called. The libc manual says that ``puts'' takes one argument, a string pointer, and it prints this
+memory to standard out, or the screen. IDA recognized that eax was on top of the stack and commented that the value in
+eax is the argument passed to the puts call. Any blue phrase that begins with a semicolon in IDA is an indication of an
+argument for the next mentioned function call. We have already determined that eax held the pointer the string ``Please
+enter the password:'', so this string must be printed!}
+
+\textbf{ \ \ After this, 10h (10 in hex) is added to esp to move the stack to clear the frame created for the puts call,
+and then 0Ch is subtracted to make room for the next call. Don't worry about not understanding how the stack works too
+much in this tutorial because it is much easier to visualize in dynamic analysis, and it is not worth stressing about
+or getting caught up on. However, it is helpful to change the 10h and 0Ch into decimal to be more easily read. To do
+this, select the green text for either number and type ``H''. This will convert from hexadecimal to decimal format, and
+it is now much easier to read. Now, let's look at the next function call. The address of ebp+s is loaded into eax, and
+then eax is pushed. After this, gets is called. We know that gets uses one argument, which is the pointer to the area
+in memory in which the string is to be stored. Now we know that location ``s'' is where our string that we input is
+stored. This must be out ``password''!}
+
+\textbf{ \ \ For the next function call, the address of our password is loaded again into eax and pushed before strlen
+is called. This must determine the length of the string that we input. After the stack pointer is added again, a mov
+instruction is used. This instruction moves the value stored in one register or area of memory into another. IDA uses
+Intel syntax, so you read it from right to left. The value of eax is moved into ebp+var\_10, and eax is the standard
+register for return value. This means that var\_10 is our string length! Let's rename it! To do this in IDA, click on
+the green ``var\_10'' and type n. We will name it input\_length. Once you do this, you will realize that all occurences
+of ``var\_10'' have been replaced with ``input\_length''. 0 is moved into var\_C, so we do not know what it's function
+is yet. After this, jmp is used to reference an unconditional jump, and we leave the box. Boxes in IDA end with jumps
+or endpoints.}
+
+\textbf{ \ \ In the next box, var\_C is moved into eax, and this is compared with input length, and if it is less, the
+green jump is taken. Decisions are being made, which seems scary! But don't worry, there are only two options for the
+flow at this time. The first time, unless no input is given, 0 must be less than the size. This means we will follow
+the green arrow to the next box. }  
+\sitgfx[width=2.5937in,height=2.3335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img048.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{We will approach this section like we did with the previous boxes. At first, the pointer of the string is loaded
+into edx, and var\_C is moved into eax. These are added together and stored in eax (remember, we read from right to
+left for Intel and IDA uses Intel syntax). Now let's look at all that we did so far and try to represent it in C code:
+var\_C = var\_C + s*. The next instruction looks ugly, but we can tell that it involves moving. The byte referenced to
+by the pointer at eax is moved into eax, and an Intel manual shows that the upper 3 bytes of register eax are zeroed.
+Then, 1 is added to eax, and the contents of register eax are moved into ecx. This is confusion, but we will go back to
+this and why it happens. Then, the address of string s is loaded into edx and var\_C is moved into eax again, and they
+are added together and stored into eax again. After this, register cl (the least significant byte of register ecx) is
+moved into the memory referenced to by eax, and then var\_C is incremented.}
+
+\textbf{Hmm, if var\_C is incremented each time, starting at 0 and ending at the length of the string, this seems like a
+for loop. Indeed, in the C code this was a for loop! We can rename var\_C ``counter'' to simplify our reading. To
+understand what the box we just read does, it helps to know that a character is one byte in size. From the first half
+and the C code that we created, we can tell that the pointer to each character consecutively in the loop is loaded into
+eax, and then a byte at that location is moved to eax. This must be the characters, from the first character we enter
+to the last! Then, 1 is added to this value, so the character at that value is incremented. After this, the code
+repeats and our C code line that we created is used again to reference the location of the character. However, the
+character in ecx is moved back into memory. This means that the characters are each incremented, starting with the
+first and ending with the last! It may seem tricky at first, but the ability to recognize loops and recognize the
+traversal of arrays becomes more natural with time. If you are confused you should read again after knowing the
+outcome, it may make more sense.}
+
+\textbf{Now that we have traversed the word, we can follow the red arrow.}
+
+  
+\sitgfx[width=6.4898in,height=3.948in]{FINALWORKINGDOCFORMERLYPRECURSOR-img049.png}{fig:unk}{TODO CAPTION}
+ \textbf{Firstly, the pointer to the string ``itsnotthiseasy'' is loaded into eax, which is then pushed onto the stack.
+This is referenced to as argument s2. The string in memory that we entered and that had each character incremented by 1
+is then loaded into eax and pushed onto the stack as argument s1, and strcmp is called. This compares the two strings,
+returning 0 if they are equal and other numbers if they are not. Test eax, eax tests to see if the value in eax is zero
+or not. If it is zero, it sets a special zero flag. If this zero flag is not set, the green arrow is taken, and the
+string ``Mission failed, we'll get them next time.'' is printed. This is a long string, so you can double click
+``aMissionFailedW'' to go to that section of memory and read the whole string.}  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=0.6563in]{FINALWORKINGDOCFORMERLYPRECURSOR-img050.png}{fig:unk}{TODO CAPTION}
+ \textbf{27h is used to refer to the single quote because that is it's ASCII value and it is a special character in this
+case. This allows it to be used in the string even if it is used to denote the start or stop of a string here. To go
+back to the previous part, click on the back facing arrow above the function list.}
+
+  
+\sitgfx[width=4.1252in,height=2.1772in]{FINALWORKINGDOCFORMERLYPRECURSOR-img051.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+This example of stepping backwards in our analysis can also be seen as a usage of a cross reference. A cross reference
+is a location in the program in which this function or string is called and used, and it can be a useful way of finding
+when functions and strings are used in the flow of the program. To find the cross references to this string, you can
+right click on it and select ``List cross references to.'' This can also be done with the keyboard shortcut ``ctrl-x''.
+When you do this, you should see the following:}
+
+  
+\sitgfx[width=6.4898in,height=1.6043in]{FINALWORKINGDOCFORMERLYPRECURSOR-img052.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{This is the location in the graph in which we found this string, because it was the code that loaded the pointer
+to the string into register eax! Double click this to go back to the graph view of our function, and we can continue
+from there.}
+
+\textbf{ \ \ The final block helps end program execution by loading 0 into eax and popping all of the variables off of
+the stack. The 0 in eax is a standard in programming to represent no errors in execution, and it is used because in C
+programs, the main method is forced to return an integer as it is declared ``int main()''. We have statically analyzed
+the whole program!}
+
+\textbf{ \ \ Now, let's look at the bigger picture. We give a password to the program, every character is incremented by
+1, and then it is compared to the string ``itsnotthiseasy.'' To do this successfully, we should decrement all of the
+characters of ``itsnotthiseasy'' to get the correct password! This password would be
+``hsrmnssghrd{\textasciigrave}rx'', as can be seen on an ASCII chart. We cannot test during static analysis, but we can
+try to understand what should happen and what we would expect to happen. This makes dynamic analysis easier because we
+know what to try and which parts to check.}
+
+{\centering
+\textbf{Dynamic Analysis}
+\par}
+
+\textbf{We will use radare2 as a tool to dynamically analyze the program now. While IDA has some debugging features,
+radare2 (commonly referred to as r2) has tons of features to view the variables and stack as you debug a binary, and it
+is incredibly helpful in understanding what happens as a binary runs.}
+
+\textbf{One easy way to get to a point in a binary is by manipulating the jumps. Sometimes, it does not matter what you
+enter because you can change the register values later on to reach your goals. We will load the binary example into
+radare2 and seek to main.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img053.png}{fig:unk}{TODO CAPTION}
+ \textbf{Now, recall the IDA graph that we analyzed, and remember that the final jump to either correct or failure.
+Before this jump is taken, the ``test eax, eax'' instruction is used to determine if the value in eax is zero or not,
+setting the zero flag. Use the arrows to scroll through the main function in radare2 and set a breakpoint at the ``test
+eax, eax'' instruction. Now, continue and hit this point.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img054.png}{fig:unk}{TODO CAPTION}
+ \textbf{We will change the value in the register eax to be zero. This way, the JNE instruction (jump if not equal to)
+will evaluate to false and not be taken. This should print the affirmative response. To do this, type ``:dr eax=0''.
+You can see the value of the eax register change to 0. }  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img055.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{After you do this, step twice to see if the jump is taken or not. You will see that the jump is not taken! By
+changing the value in the register you have beaten the challenge! Continue execution to see that you won.}
+
+\textbf{Wait, is it also possible to change the instructions? Yup! This time we will change the JNE instruction into a
+NOP, and this will make sure that the jump is not taken and the program flows into the correct section of the program.
+To do this, you will load example into radare2 and seek to main. Then, you will scroll through main until the ``jne
+0x56624689'' instruction is at the top of the code. Then, you can use ``c'' to go to cursor mode, and tab twice to put
+the cursor in the code. Use the arrow keys to put the cursor on the opcodes of the instruction that you want to edit.
+Now, type ``a'' and you will be prompted to enter assembler opcodes.  You will write two NOP instructions (0x90) in the
+place of the jump not equal instruction.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img056.png}{fig:unk}{TODO CAPTION}
+ 
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img057.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{We use two because a NOP is one byte and a JNE is 2 bytes in length. A NOP instruction stands for ``no
+operation'', and the code execution flows through these NOP instructions without changing anything except for the eip.
+This is called patching, and it is used to change the flow of programs and redirect execution to wherever you want.
+Doing this in radare2 in debug mode will not change this permanently, however, so you can test anything that you want
+without having to worry about ruining your binary! As you run the program, you can put any input and still reach the
+correct component of the program.}
+
+\textbf{Now, we will put this binary into a different context. Let's say that this is a challenge and the flag is the
+password that we input. Now, the input actually matters, so we must find out what the password should be. Open the
+binary example in radare2 and seek to main. Here we can see the gets, puts, strlen, and strcmp functions that were seen
+in IDA as they are called. They are highlighted into a light green color at the default color setting to stand out as
+functions that are called.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img053.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{In order to see what the puts function is doing, let's put a breakpoint after puts and debug continue until that
+point. After doing this, you will see the phrase ``Please enter your password: ``, which shows the string that the puts
+call used from the stack as an argument}
+
+\textbf{The string was located at the address [ebx-0x189f]. The square brackets dereference the value inside them in x86
+assembly. So if ebx was 0x55555555 then [ebx] would tell what is stored at the address 0x55555555 instead of the
+location itself. To display the string at other times during execution before ebx is changed, you can print the string
+in the memory at this location using the command ``pxw 0x20 @ ebx-0x189f''. Note that the pxw dereferences the argument
+given to them automatically. So to see the value at ebx use ``pxw 0x20 @ ebx'', not ``pxw 0x20 @ [ebx]''. Pxw stands
+for print hexadecimal (x) word. A word is 4 bytes in length. }
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img058.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{After this, we know that the gets function takes user input because it is a commonly used libc function. To find
+out what the purpose of a libc function like gets is, you should use the command ``man gets'' in the command line in a
+new terminal window. You should notice that the man page warns the user that gets is an insecure function to use.
+Looking back before the gets function is called, we see that the value ebp-0x24 is loaded into eax and pushed to the
+stack. This means that the local variable ebp-0x24 is the first argument to gets, and the location of the local
+variable where our input is stored. This can be determined by the man page for gets as the first argument, so it is
+always a good idea to use the man pages for unknown libc functions. Single step to the call.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img059.png}{fig:unk}{TODO CAPTION}
+ 
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img060.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Right now, you should use shift s to step over the gets call. This is important because the code for the gets
+function is long and complicated. If there is an issue and you land inside of a function like gets and just want to
+return to the previous function, use the command dcr to continue until the next ret instruction. Instead of this, you
+can use s main to seek back to main, and you can set a breakpoint after gets returns. Then, dc should return you to
+this point.}
+
+\textbf{Now let's print 20 bytes, as words, at the location ebp -- 0x24 to check that our input is stored there. After
+this, let's try to find the precise location that the input is stored at. To do this, you can use the command ``? ebp
+-- 0x24''. The second value shown is the hexadecimal formatted address for this value. As you can tell, this is the
+same value as eax, which shows that the gets function returns the value of the pointer to the input.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img061.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Note that the same ebp-0x24 value is the argument to sym.imp.strlen. place a breakpoint after the call to strlen
+and debug continue. Note that after the call, the value in eax is 0x10 (which is 16, not 10). The this value is place
+into the stack variable ebp-0x10. On the left side of the screen, you'll see two arrows. These show that the program
+execution will be jumping up and down the instructions here. If you look at the bottom jump command, you notice that
+the compare jumps if the value in ebp-0xc is lower then the value in ebp-0x10. So this loop will probably count upwards
+by one until it reaches the length of our string.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img062.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Looping at the code inside the loop, we see that the loop takes the address of our string and counts upward
+through each letter in the string, and adds one to the ascii value in each letter (so `h' becomes `I', `a' becomes `b',
+`b' becomes `c').}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img063.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Next we see that the binary is calling a string compare. Let's see what is being compared to our input.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img064.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Well, now we think we may know what the password entered should be. Now, I'll reset the instruction pointer to
+the beginning of main by executing dr eip = 0x565fd5dc. (This address may be different for you on your computer.)}
+
+\textbf{To solve the crackme, we will use a python script. We know that the solution should involve every character of
+itsnotthiseasy that is decremented by one. The python script is as follows:}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img065.png}{fig:unk}{TODO CAPTION}
+ 
+
+{\centering
+\textbf{Reversing -- Tips and Tricks}
+\par}
+
+\textbf{ \ \ Now that you have gone through a normal static analysis workflow, you can tell that this could become
+incredibly time consuming very quickly. However, there are tons of little tricks that can save you time. Many
+constructs are used in similar fashions throughout many C programs, like the way that all for loops are recognizable
+for their arrows backwards to previous boxes and a register or variable incrementing. To help you see this, I created a
+C program that involved many different data types and control flows. This is similar to a great video I watched by a
+Youtuber known as Live Overflow, so I want to make sure to give credit to him and his ideas. I highly recommend that
+you watch his binary exploitation series. Because this is not as much about reversing a program without source code, I
+provided the source code  for the program. It is in the c\_constructs.c file, which you should have open next to IDA as
+you analyze.}
+
+  
+\sitgfx[width=3in,height=4.1252in]{FINALWORKINGDOCFORMERLYPRECURSOR-img066.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{To help you understand what the size is of each character, you can see what kind of memory location they are
+stored in. A dword, or double word, is a memory location that is 4 bytes in length. A qword, or quad word, is a memory
+location that is 8 bytes in length. As you can tell from the various pointers to memory location, all of which were
+created for local variables, all are stored in dwords, qwords, or bytes. The most common of these that you will see are
+characters in strings and integers. The character is always represented as a byte, and integers and stored as dwords in
+memory. Because of this, if you see bytes being used and referenced frequently in a program, you could infer that
+strings and characters are probably being used. If there are dwords being used in a password checking program, it is
+more likely that it is some sort of passcode with numbers.}
+
+  
+\sitgfx[width=6.4898in,height=3.802in]{FINALWORKINGDOCFORMERLYPRECURSOR-img067.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{This is an example of a for loop. The variable labelled ``var\_40'' is the counter that loops through the for
+loop. When you look quickly at a loop like this, you can tell that this is a loop because of the blue arrow that points
+upwards to the box at loc\_563. Also, you can tell that it's a for loop that increments from 0 to 9 because the initial
+instruction is ``mov [ebp+var\_40], 0''. Then, it is compared against 9 after being moved into edx, and it is
+incremented in the box on the bottom left of the picture above. All of these can be seen by reading through the
+assembly language line by line, but looking at the boxes before and after the arrow that goes upwards can reveal a ton
+about the functionality.}
+
+  
+\sitgfx[width=6.5in,height=3.9374in]{FINALWORKINGDOCFORMERLYPRECURSOR-img068.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Here are two other loop examples. The loop on the right is taken first because var\_40 is still 10 from the
+previous for loop. Here a while loop is used, which can somewhat be seen by the way that 2 was added to edx instead of
+1, but for loops can use increments of 2 as well. You can definitely tell that it is a loop because of the arrow
+pointing upwards, and it isn't quite the same as the for loop from before. Then, the box on the left is a do while
+loop. This can be seen because of the arrow pointing upwards into the same box. Also, the instructions that start with 
+{}``f'' indicate floating point instructions, and these are used when floats or doubles are used in computations.}
+
+  
+\sitgfx[width=6.4898in,height=0.6252in]{FINALWORKINGDOCFORMERLYPRECURSOR-img069.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{A switch can be easily distinguished by the long row of boxes. All of these boxes are aligned and are referenced
+from the same box above them. Also, I can identify switches often based on the fact that they are reached by a ``jmp
+eax'' instruction rather than a jump based on the comparison of values. Many different values can be stored in eax, and
+these pointers can be used based on the case of the switch.}
+
+  
+\sitgfx[width=2.8646in,height=1.2083in]{FINALWORKINGDOCFORMERLYPRECURSOR-img070.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{When a function is called in this program, the add function, the arguments are pushed onto the stack in reverse
+order. This is a normal calling convention for C, and it is called the cdecl convention. This stands for ``C
+declaration'', and it is used in most C programs that are compiled on a Unix system as ELF files. All of the programs
+that we have reversed so far have used the cdecl convention, like the main methods in this program and in the previous
+example program. What happens in these is that the arguments are pushed in reverse order after space is created for
+these, and then they are located in higher memory than the stack pointer esp once the function is called and the new
+stack frame is created. }
+
+  
+\sitgfx[width=3.3646in,height=3.7602in]{FINALWORKINGDOCFORMERLYPRECURSOR-img071.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{In the called function, the new frame is created without subtracting esp at all. This is because no new
+variables were created in this function, and the return value was put into eax. This is a standard convention in
+assembly language, so you can safely assume for most conventions that eax holds the return value for the previously
+called function until anything else is placed in the register.}
+
+  
+\sitgfx[width=6.5in,height=4.5311in]{FINALWORKINGDOCFORMERLYPRECURSOR-img072.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Here you can see how the hardcoded array is placed into memory. All of the integers are placed into memory
+locations located next to each other, within 4 bytes of each other. This helps in traversing the array because the
+elements are all 4 bytes away from each other. An important line here is ``mov [ebp+eax*4+var\_58], edx''. This helps
+locate each element in the array because the first element of the array is located at ebp+var\_58. Then, the eax times
+4 helps traverse from one element to the next based on the value of eax, starting with eax equal to 0. After this, a
+string is hardcoded into the array based on the ascii values in reverse order, known as little endian order. Also, as
+we mentioned the return values for functions, a value of 0 is moved into eax to indicate that the program was able to
+exit without any error!}
+
+\textbf{The best way to learn reverse engineering, especially static analysis, is by creating your own programs with
+strange and unique constructs and seeing how the graph in IDA reflects your functions. Knowledge of loops and
+conditions makes this much easier, but there are many ways in which different algorithms and functions could be
+represented. To practice your reverse engineering skills and learn how program control flows in various ways, I have
+provided a famous bomb lab from Carnegie Mellon University. This would be tested by running it or using dynamic
+analysis, but you can use static analysis to read each phase and understand how they work. The most important thing is
+to be patient, keep an x86 manual nearby, and make sure to look at the bigger picture!}
+
+{\centering
+\textbf{Exploits}
+\par}
+
+\textbf{ \ \ We should now look at the functions that are used to see where there could be vulnerabilities. The most
+obvious sore thumb is the gets method. This method is not safe to use because it does not hold bounds. You could enter
+any amount of characters and overwrite other parts of memory in the program. This holds many options, as you will see
+during the dynamic analysis method, and you will also learn about how to reach that secret ``win'' function that we
+found in IDA.}
+
+{\centering
+\textbf{Buffer Overflows}
+\par}
+
+{\centering
+\textbf{By Ambrose Douglas}
+\par}
+
+\textbf{This tutorial should give a basic understanding of buffer overflows, shellcode, and what first steps to take
+when approaching a ctf-style pwn challenge. The tutorial is for a 64 bit linux (Kali specificially) using radare2
+version 2.3.0 and is aimed to be for beginners. However, some experience with assembly and c or c++ programming
+languages will help dearly. For anyone reading this without any experience in assembly and c, I recommend reading up on
+those topics first.}
+
+\textbf{BuffO\_1.out}
+
+\textbf{Accompanying this tutorial should be a link to several program files. To start off, we will be working with
+BuffO\_1.out. A good first step when approaching a binary problem is to scout a little about your file. Run ``file
+BuffO\_1.out''}
+
+  
+\sitgfx[width=5.8335in,height=0.7665in]{FINALWORKINGDOCFORMERLYPRECURSOR-img073.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{Output of file BuffO\_1.out}
+
+\textbf{ELF stands for Executable and Linkable Format. This really just means the program is built for linux. If this
+said PE32+ executable, x86-64 then the file would be a binary built for windows.}
+
+  
+\sitgfx[width=5.8335in,height=0.9602in]{FINALWORKINGDOCFORMERLYPRECURSOR-img074.png}{fig:unk}{TODO CAPTION}
+ 
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img075.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Now type ``V'' then enter to open visual mode}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img076.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{output from v}
+
+\textbf{The first visual mode is a basic hexdump of the binary. This can be useful at times but we will go for a
+different view for now. type ``p'' twice without hitting enter.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img077.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{This may be a little bit to take in if this is completely new to you so take a deep breath, but don't worry.
+It's not so bad. Now, you can see a view of the instructions in memory that are going to be executed at the bottom of
+the display. The rows of 0x00000000's with labels are the registers of the computer and at the top of the screen is a
+view of the stack.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img027.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{For those new to assembly, registers are like variables for assembly. You can move data into and out of
+registers (mov rax, 6)and use the to push and pop data from the stack (pop rax). Several registers have special
+purposes. rip is used to point to the next assembly intsruction the computer is going to execute in memory. Right now,
+rip is 0x7f3016a9bea0 and if we look at the code at the bottom panel we see this agrees with the topmost instruction in
+memory.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img078.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{The register rsp is used to point to the top of the stack. As you can see, the address in rsp is 0x7ffc2d515cf0
+which agrees with the highest stack address in the top view.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img079.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{To see where execution of the program actually begins type the colon : without hitting enter. Sometimes r2 is
+glitchy and you may have to hit it twice. You should see a tab for command execution pop up at the bottom of the
+screen. Type ``db main'' and hit enter, then ``dc'' and hit enter again.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img080.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{main is the execution starting point of programs written in c and c++ for command line. the ``db'' command sets
+a breakpoint inside the code of the program. So by typing ``db main'' you set a breakpoint at the beginning of the main
+function, which is the start of the program. (Radare2 actually starts a program and breaks before the main function or
+the program starts.) Other functions can be used the same way. For example if a program had a function in it called
+sayHello() then ``db sayHello'' would put a breakpoint at the beginning of that function. You can enter offsets into
+the ``db'' command as well. type ``db main+1'' to set a breakpoint at the second instruction of the main function. The
+``dc'' command stands for debug continue, and runs the program until another breakpoint is hit. Breakpoints can also be
+set by using the up and down keys to look through memory and then hitting shift + b to place a breakpoint at the
+highest instruction in the display. (You cannot use this when the tab for commmand execution is open at the bottom of
+the screen. hitting enter without typing any command will get rid of the tab.) Hitting shift + b again will remove the
+breakpoint. or using a minus (-) in the ``db'' command. For example ``db -main'' will remove the breakpoint at the
+start of main.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img081.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Set breakpoints after each of the ``call'' instructions in main and you should see b's next to their
+instructions. If you run ``dc'' now, you will see the execution of the program. First, ``Password please:'' is printed
+to the screen}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img082.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{output from the program that says Password Please}
+
+\textbf{running ``dc'' again opens a prompt for user input}
+
+\textbf{ans the program is built for linux. If this said PE32+ executable, x86-64 then the file would be a binary built
+for windows.}
+
+  
+\sitgfx[width=5.8335in,height=0.9602in]{FINALWORKINGDOCFORMERLYPRECURSOR-img074.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Now run ``checksec Buff0\_1.out''}  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img083.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{Output of checksec BuffO\_1.out shows different mitigation techniques for exploitation.}
+
+\textbf{Here we see a list of common mitigation techniques to make programs harder to hack. The three labeled RWX, NX,
+and Stack will be focused on today but I recommend reading up on RELRO, PIE (Postition Independent Executable) and how
+the Global Offset Table works for further development after you have a grasp of the others. To fully understand how
+each of these mitigation techniques work and how they can be circumvented, we need a little background.}
+
+{\centering
+\textbf{Mitigation Techniques}
+\par}
+
+\textbf{In checksec's output, we saw the line marked Stack: No canary found. Canary's are special secret numbers that
+the computer places onto the stack. This way, if someone overwrites a section of memory they are not supposed to, the
+computer can check to see that the canary's are still intact, and if they have been changed, abort the program. Having
+no canaries in our program is nice and we will not have to deal with them.}
+
+\textbf{The stack is one of several regions of memory. Each region of memory can be marked as readable (r), writable
+(w), or executable (x). Memory can only be accessed if it is marked appropriately. As a attacker, seeing memory marked
+RWX is a good sign because we can know we can write vulnerable code to the region and then execute it. Later in this
+tutorial, we will overwrite the stack with ``shellcode'' of our own and execute it.}
+
+\textbf{The output from checksec underneath ``Stack: No canary found'' says ``NX: NX disabled''. You will find that the
+stack is often a big target for executing shellcode on. Because of this, checksec specially tells you if the stack is
+labeled executable or not. NX stands for No-Execute. Having NX disabled (talk about a double negative) means we can run
+wild with shellcode on the stack!}
+
+\textbf{There is another mitigation technique that is not listed in checksec's output but is worth mentioning. Address
+Space Layout Randomization (ASLR) rearranges the locations of areas of memory in computer programs inside a computer.
+This may not mean much now but keep it in mind for later. You'll find when you a reversing programs that addresses
+change each time you close and reopen the program. If you want to turn off ASLR you can execute:}
+
+\textbf{echo 0 {\textgreater} /proc/sys/kernel/randomize\_va\_space}
+
+\textbf{Don't develop a crutch by relying on this all the time though! Also, I would not recommend permanently disabling
+it on your computer for security reasons.}
+
+{\centering
+\textbf{Running Radare2}
+\par}
+
+\textbf{Now for the good stuff!}
+
+\textbf{To open up the binary with radare2 run ``r2 -d BuffO\_1.out''. The -d means open the file using debugging mode.
+You should see a output similar to below:}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img084.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Radare2 can perform some automatic analysis of the binary that is helpful. Type ``aaa'' and hit enter to analyze
+the binary. Sometimes, creators of binaries can mangle this and make analyzing more difficult. Or if the binary is
+extremely big, this may take a few seconds. However, it is normally worth a shot.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img075.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Now type ``V'' then enter to open visual mode}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img076.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{output from v}
+
+\textbf{The first visual mode is a basic hexdump of the binary. This can be useful at times but we will go for a
+different view for now. type ``p'' twice without hitting enter.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img077.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{This may be a little bit to take in if this is completely new to you so take a deep breath, but don't worry.
+It's not so bad. Now, you can see a view of the instructions in memory that are going to be executed at the bottom of
+the display. The rows of 0x00000000's with labels are the registers of the computer and at the top of the screen is a
+view of the stack.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img027.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{For those new to assembly, registers are like variables for assembly. You can move data into and out of
+registers (mov rax, 6)and use the to push and pop data from the stack (pop rax). Several registers have special
+purposes. rip is used to point to the next assembly intsruction the computer is going to execute in memory. Right now,
+rip is 0x7f3016a9bea0 and if we look at the code at the bottom panel we see this agrees with the topmost instruction in
+memory.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img078.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{The register rsp is used to point to the top of the stack. As you can see, the address in rsp is 0x7ffc2d515cf0
+which agrees with the highest stack address in the top view.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img079.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{To see where execution of the program actually begins type the colon : without hitting enter. Sometimes r2 is
+glitchy and you may have to hit it twice. You should see a tab for command execution pop up at the bottom of the
+screen. Type ``db main'' and hit enter, then ``dc'' and hit enter again.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img080.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{main is the execution starting point of programs written in c and c++ for command line. the ``db'' command sets
+a breakpoint inside the code of the program. So by typing ``db main'' you set a breakpoint at the beginning of the main
+function, which is the start of the program. (Radare2 actually starts a program and breaks before the main function or
+the program starts.) Other functions can be used the same way. For example if a program had a function in it called
+sayHello() then ``db sayHello'' would put a breakpoint at the beginning of that function. You can enter offsets into
+the ``db'' command as well. type ``db main+1'' to set a breakpoint at the second instruction of the main function. The
+``dc'' command stands for debug continue, and runs the program until another breakpoint is hit. Breakpoints can also be
+set by using the up and down keys to look through memory and then hitting shift + b to place a breakpoint at the
+highest instruction in the display. (You cannot use this when the tab for command execution is open at the bottom of
+the screen. hitting enter without typing any command will get rid of the tab.) Hitting shift + b again will remove the
+breakpoint. or using a minus (-) in the ``db'' command. For example ``db -main'' will remove the breakpoint at the
+start of main.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img081.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Set breakpoints after each of the ``call'' instructions in main and you should see b's next to their
+instructions. If you run ``dc'' now, you will see the execution of the program. First, ``Password please:'' is printed
+to the screen}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img082.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{output from the program that says Password Please}
+
+\textbf{running ``dc'' again opens a prompt for user input}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img085.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{running ``dc'' again will exit the program. At this point you can enter ``ood'' to restart the program. However,
+you will have to re-enter your breakpoints.}
+
+\textbf{You can also step through a program by hitting shift and s. This will execute one instruction at a time and show
+how the program changes with each step. Holding shift will make you jump over a calls to other parts of the program. If
+you let go of shift and step at the instruction ``call sym.imp.puts'' for example, you will see the assembly for the
+sym.imp.puts function. To get back so main, open the command tab and enter ``s main'' which stands for seek main. This
+will move you back to the main function where you can set a breakpoint after the ``call sym.imp.puts'' instruction and
+then run ``dc'' to finish the call to sym.imp.puts. At this point, you should hit q and then q again to exit radare2
+and make sure you can run these commands again. Feel free to play around with entering a command then ``?'' to try to
+get help.}
+
+{\centering
+\textbf{Explanation of the assembly}
+\par}
+
+\textbf{The function prologue}
+
+\textbf{Now, I will explain the assembly instruction of the program to give a understand of why some of the code looks
+like it does. This tutorial is meant to get complete beginners started, Unfortunately, I cannot give a full tutorial on
+programming in x86 assembly as this would take a book to explain. However, this should get you up and running with some
+basic assembly and hopefully will allow you to smoothly transition to other tutorials.}
+
+\textbf{The first instruction is ``push rbp''.}
+
+  
+\sitgfx[width=5.8335in,height=0.7035in]{FINALWORKINGDOCFORMERLYPRECURSOR-img086.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{The instruction pushes whatever data is in the register rbp onto the stop of the stack. Take a mental note of
+the value held in the rbp register then hit ``s'' to step over this instruction and you will see that value at the top
+of the stack.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img087.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Next is the ``mov'' instruction. mov is short for move and takes two operands. Whatever is in the second operand
+is moved into the first. So for example to move 6 into rax you would see the instruction}
+
+\textbf{{}``mov rax, 0x6''}
+
+\textbf{The ``0x'' before the 6 means the number is in hexadecimal. Instead of counting 0, 1, 2, {\dots} 8, 9, 10 the
+computer uses 16 symbols 0x0, 0x1, 0x2, {\dots} 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10. Where 0xa corresponds to
+10. 0xb corresponds to 11, etc.}
+
+\textbf{The instruction ``mov rbp, rsp'' takes whatever value is in rsp (the top of the stack) and places it into rbp.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img088.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{shows the execution after mov rbp, rsp}
+
+\textbf{Finally hit ``s'' to run ``sub rsp, 0x70''. This command subtracts 0x70 (which is 7 * 16 = 112) bytes from the
+value in rsp. The three commands}
+
+\textbf{{}``push rbp''\newline
+{}``mov rbp, rsp''\newline
+{}``sub rsp, 0x70''}
+
+\textbf{together are used to set up functions in assembly. They are called the function prologue. Pushing rbp and then
+moving the value of rsp into rbp before you subtract from the stack allows you to keep track of where the stack frame
+previously was before it grows. By subtracting 0x70 from the rsp register (which points to the top of the stack) you
+increase the size of the stack by 112 bytes. Executing these three instructions right after a call instruction (like
+the call sym.imp.puts instruction inside main) you efficiently set up new stack frames for each function. Then once a
+function is finished the stack frame is returned to it's previous point by reversing these three commands. Because this
+concept is so important I will illustrate it further with a basic example.}
+
+\textbf{Lets say the stack frame currently is 0x30 bytes}
+
+\textbf{0x00100: rsp is here\newline
+0x00110:\newline
+0x00120:\newline
+0x00130: rbp is here}
+
+\textbf{and a new function is called in the program:}
+
+\textbf{0x0001: call new\_function\newline
+0x0002: do stuff after the new\_function{\dots}\newline
+{\dots} 0x0005: new\_function starts here}
+
+\textbf{The call instruction changes the execution of a program. Whenever a function is called in c or c++ this compiles
+down to a call instruction or similar in the assembly. The call instruction pushes the next instruction after the call
+onto the stack. So in our example above, 0x0002 will be pushed onto the stack. Then the programs instruction pointer
+(rip) jumps to the beginning of the new\_function. So the stack would now look like}
+
+\textbf{0x00090: rsp (top of stack)\newline
+0x00100: 0x0002\newline
+0x00110:\newline
+0x00120:\newline
+0x00130: rbp is here}
+
+\textbf{and the instruction pointer would be at the beginning of new\_function}
+
+\textbf{new\_function()\newline
+0x0005: rip is here\newline
+0x0006: do some stuff{\dots}}
+
+\textbf{After a call instruction is executed normally the three instructions ``mov rbp, rsp'' ``pop rbp'' and ``sub rsp,
+some\_amount'' will be executed. So lets see the three commands be executed at the beginning of new\_function.}
+
+\textbf{new\_function()}
+
+\textbf{0x0005: push rbp\newline
+0x0006: mov rbp, rsp\newline
+0x0007: sub rsp, 0x30 ;(grow the size of the stack by 0x30)}
+
+\textbf{First, push rbp is called and the stack will look like this:}
+
+\textbf{0x00080: rsp is here\newline
+0x00090: 0x00130 (rbp's value)\newline
+0x00100: 0x0002 (the instruction to be executed after new\_function returns)\newline
+0x00110:\newline
+0x00120:\newline
+0x00130: rbp is here}
+
+\textbf{Then ``mov rbp, rsp'' is called and the value in rsp is copied over to the rbp register}
+
+\textbf{0x00080: rsp and rbp are here\newline
+0x00090: 0x00130 (rbp's old value of 0x00130)\newline
+0x00100: 0x0002 (the instruction to be executed after new\_function returns)\newline
+0x00110:\newline
+0x00120:\newline
+0x00130:}
+
+\textbf{finally 0x30 is subtracted from rsp and the stack grows.}
+
+\textbf{0x00050: rsp is here\newline
+0x00060:\newline
+0x00070:\newline
+0x00080: rbp is here\newline
+0x00090: 0x00130 (rbp's previous value)\newline
+0x00100: 0x0002 (the instruction to be executed after new\_function returns)\newline
+0x00110:\newline
+0x00120:\newline
+0x00130:}
+
+\textbf{If you take a look at the bottom of the main function in radare2 you will see two instructions. leave and ret}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img089.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{These instructions are the ones that reverse the first three and return the stack frame to it's previous
+position. The leave instruction is basically equivalent to running}
+
+\textbf{mov rsp, rbp\newline
+pop rbp}
+
+\textbf{which would first move rbp's value into rsp}
+
+\textbf{0x00060:\newline
+0x00070:\newline
+0x00080: rbp and rsp are now here\newline
+0x00090: 0x00130\newline
+0x00100: 0x0002\newline
+0x00110:\newline
+0x00120:\newline
+0x00130:}
+
+\textbf{then pop the value at the top of the stack into rbp}
+
+\textbf{0x00090: rsp is now here\newline
+0x00100: 0x0002 (the next instruction after new\_function returns)\newline
+0x00110:\newline
+0x00120:\newline
+0x00130: rbp is now back to it's original place}
+
+\textbf{finally, ret is called. ret takes whatever value is at the top of the stack and movs it into rip, the
+instruction pointer. Now the stack is back to it's original frame and the instruction pointer is directly after the
+call new\_function instruction}
+
+\textbf{0x00100: rsp is here\newline
+0x00110:\newline
+0x00120:\newline
+0x00130: rbp is here\newline
+{\dots}\newline
+0x0001: call new\_function\newline
+(rip is here)\newline
+0x0002: do stuff after new function}
+
+\textbf{I would bet that you are now thinking, great! Why is this important? Hacking often revolves around abusing a
+existing structure in a computer to accomplish a unexpected result. Imagine what would happen if the memory on the
+stack was corrupted? For example, lets say I stuff tons of ``A'' values into the stack which is equivalent to the
+hexadecimal number 0x41.}
+
+\textbf{0x00050: rsp is here\newline
+0x00060: AAAAA\newline
+0x00070: AAAAA\newline
+0x00080: AAAAA (rbp used to be here)\newline
+0x00090: AAAAA (0x00130 used to be here which was rbp's previous value)\newline
+0x00100: AAAAA (0x0002 was here which was the instruction to be executed after new\_function returns)\newline
+0x00110: AAAAA\newline
+0x00120:\newline
+0x00130:}
+
+\textbf{Now when the computer calls leave and return, it tries to load the value AAAA into the rbp and rip registers
+which crash the program. (muahaha, breaking computers is so much fun). What would happen if instead of AAAAA, we spread
+a memory address of a function we wanted to call over the stack? Instead of crashing, the program instruction pointer
+jumps to this unexpected function and starts running it. This is called a buffer overflow vulnerability and can be used
+to call functions that spawn shells, connect to the internet, or other nefarious deeds.}
+
+{\centering
+\textbf{Exploitation}
+\par}
+
+\textbf{Lets try to buffer overflow our program Buff0\_1.out!}
+
+\textbf{In main, the program runs}
+
+\textbf{{}``lea rdi, qword [rip + 0x118]''\newline
+call sym.imp.puts}
+
+\textbf{qword stands for quadword and is a certain size memory chunk in the computer. lea stands for load effective
+address. So, this command is loading the address of the quadword at rip+0x118 into the register rdi. You can check by
+stepping this instruction and seeing the value of (rip + 280) be moved into rdi. The register rdi is used as the first
+argument to a function when calling a function in assembly. The order of arguments passed to a function in a 64bit call
+are rdi, rsi, rdx, rcx, r8, r9, then any more arguments are placed on the stack. (Note that this is different from a
+32bit computer, which will described later.) You can use the command ``pxq 0x20 @ rdi'' to print 0x20 bytes of hex
+(hence the x in pxq) at the value held in rdi. If you do this, you will see ``Password please:'' stored in memory as a
+string at that location. By calling sym.imp.puts after this instruction the compiler passes the value ``Password
+please'' to the puts function, which prints it to the screen.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img090.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{After the program prints ``Password please'' it goes to accept input from the user. ``lea rax, qword [rbp -
+0x70]'' loads the stack address 0x70 bytes above rbp into rax. This is how function variables are stored in memory.
+Inside of a function when a variable is declared, like this}
+
+\textbf{int function() \{ int local\_var; local\_var = 5; \}}
+
+\textbf{local\_var is a address above the rbp like rbp - 0x70. The second instruction would compile to something similar
+to ``mov rax, 0x5'' then ``mov [rbp-0x70], rax''}
+
+\textbf{the value of [rbp-0x70] is then moved from rax into rdi. So our local variable is the first argument to the gets
+function. Next, a 0 is moved into eax (which clears rax) and sym.imp.gets is called. If place a breakpoint after ``call
+sym.imp.gets'' and dc you will see ``Password please'' printed to screen.}
+
+  
+\sitgfx[width=5.8335in,height=2.9654in]{FINALWORKINGDOCFORMERLYPRECURSOR-img091.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{If we open up a new terminal window and type ``man gets'' we can see the linux manual page for the gets
+function. Gets takes input from the stdin until a newline character or EOF is reached. Lets try throwing a bunch of A's
+into the local variable with a few B's and C's at the end and see if we can overwrite any important stack addresses.
+Since I am looking to overwrite the return address of main, I'll start with 0x70 bytes (or 7 * 16 = 112) of A's then
+throw 16 B's and 16 C's. Place a breakpoint after the second call instruction then hit dc and you will see you can
+enter user input in the command tab.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img092.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{Show my input of many As in the command tab}
+
+\textbf{and just like that, our stack is full of 0x41s. If you would like to examine the stack, you can hit ``c'' (not
+in the command window) and then use up and down to move through the stack. Hitting ``c'' again will bring you back to
+the instructions window.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img093.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Now if we hit dc again, we see our program crashes and returns signal 11. Lets rerun the binary and find the
+return address for main, and what As exactly overwrite that address. Normally, you could see when a function is called
+to find the next instruction pointer you can just look at the address of the instruction underneath the call
+instruction. Because I am unsure where main is called from, I can simply put a break mark on the return instruction,
+continue execution until then, then step and examine the address we return to after main. Once I know the address I
+return to, I look at the stack for where that address is relative to rbp.}
+
+\textbf{Here is at the end of main.}\newline
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img094.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{After stepping, we see the next instruction in memory.\newline
+}  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img095.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Now, we know the exact location of our return address and can calculate it. If you want to do a quick
+calculation in radare, you can hit ``:'' to go into command mode and then type a ``?'' followed by some mathematical
+expression. Here I enter 0x70 to see it's decimal value but also you can enter in addition, multiplication, and
+subtraction.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img089.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{After a little testing I find that inputting 0x78 A's followed by 6 B's exactly overwrites my return address.
+So, now if instead of overwriting my return address with 6 B's, I could overwrite append the address of a function
+after the 0x78 A's. If you scroll to the code above main's function in the binary by hitting the up key a few times,
+you will notice a function labeled sym.never\_called(). I wonder who put that function there :).}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img096.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Currently, the address of never called is 0x564ea17e26ca. (Note that this address will be different for you and
+will change each time you restart the program. You will have to check it's value each time your restart the program.)
+If you try to directly paste this as a string into the radare input after ``Password please:'' you will find the
+program does not jump to the new function. The reason is the program is accepting input as a string. We need to enter
+the bytes directly into the input. There are two option to do this. The first option is to create a file with our input
+by opening up a new terminal window (cntrl shift t if you are using terminator) and entering echo -en
+``AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA564e17e26''
+{\textgreater} foo.txt}
+
+\textbf{the -en removes the newline from the echo command output and treats the input as bytes.}
+
+\textbf{Then create another file called foo.rr2 and enter into it:}
+
+\textbf{stdio=/dev/pts/0\newline
+stdin=./foo.txt}
+
+\textbf{Double check by entering ``tty'' into the terminal windows before opening radare2 that the output is /dev/pts/0.
+If it is a different number besides 0 use that number. (You can see in the screenshot I changed mine to /dev/pts/1)}
+
+\textbf{finally run radare2 with the command ``r2 -d filename -e dbg.profile=foo.rr2''}
+
+\textbf{Now, whatever bytes are stored in foo.txt will be entered as the input automatically in radare2.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img097.png}{fig:unk}{TODO CAPTION}
+ \textbf{ }
+
+\textbf{The second option for entering input into radare2 is by pwntools from python. pwntools is a library full of
+tools useful for binary reversing. This makes it extremely useful and therefore the more useful solution to our
+predicament.\newline
+First open up two side by side terminal windows. In one type ipython to open up ipythons command interface. Then enter
+``from pwn import *{\textquotedbl} and ``p = process(`./BuffO\_1.out')''}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img098.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{now before you do anything more in python. open up radare with ``r2 -d pid'' where pid is the process id of the
+program you just ran in pwntools. (it will say the pid when it starts)}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img099.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{In the command tab seek to main using ``s main'' it is import that you do not type ``dc'' right now because
+radare2 does not realize the process was already started by ipython. It does not know where the instruction pointer is
+located.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img100.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{entering s main after starting radare2}
+
+\textbf{It is actually waiting inside the gets function because user input has not been provided to the program yet. In
+order to use this technique you have to put a breakpoint after where user input is accepted in a binary.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img101.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{show breakpoint after gets in main}
+
+\textbf{There! Now when we type ``dc'' in radare2, it ``catches up'' with the actual process run by ipython and also
+waits for user input}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img102.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{show radare2 caught up with pwntools}
+
+\textbf{Right now, radare2 is hanging because the process will not continue until we send it input through pwntools. To
+send data to the binary in ipython, we use p.send() or p.sendline(). Sendline will automatically add a newline
+character ``'' to the input we give it, which we need for this program since we had to hit enter for gets() to accept
+our input.}\newline
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img103.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Now when we hit enter to execute p.sendline() we will see radare2 hit a breakpoint after the gets function, and
+our stack is full of A's. Notice how in python we could just type ``A''* 0x70 instead of copy pasting tons of letters
+around.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img104.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{Show how execution of sendline in pwntools filled stack with As}
+
+\textbf{Only there is a problem here. We have made a small mistake. Programs store data in what is referred to as
+little-endian form. If we look at the address I just entered by string to our program ``55813b22864'', on the stack it
+is reversed! little-endian form just reverses the order of bytes on the stack. A quick fix to this is to postfix [::-1]
+to our string input in ipython. Try restarting the above commands for practice using pwntools to return to this state
+but now add the postfix [::-1].}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img105.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Now lets set another breakpoint at the ret instruction. Notice that the address is loaded in memory correct
+now.}
+
+  
+\sitgfx[width=5.8335in,height=1.922in]{FINALWORKINGDOCFORMERLYPRECURSOR-img106.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{Show correct memory address}
+
+\textbf{And we step again.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img107.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{And if all goes well, we jump to the beginning of our never\_called function.}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img096.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{Show the instruction pointer at the beginning of never called}
+
+\textbf{hit ``dc'' and you'll note that the program finishes with signal 11. Now go into ipython and enter p.read()}
+
+  
+\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img108.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textit{Show output from p.read() instructions}
+
+\textbf{p.read() and p.readline() are used in python to read data from a programs standard output. Note that your output
+may look a little different, since I called p.read before and after executing the never\_called function.}
+
+{\centering
+\textbf{Differences between 64 and 32 bit}
+\par}
+
+\textbf{In some parts of the tutorial, it was noted some topics would look a little different between 32 and 64 bit
+computers. Here, I will give a little explanation about what differences you will see. }
+
+\textbf{First off, in a 64 bit computer, the registers hold 64 bits, while in a 32 bit computer, they hold 32. }
+
+\textbf{The 32 bit registers start with e's (eax, ebx, ecx, edx, esi, edi etc) rather than r's (rax, rbx, rcx, rdx) They
+work generally the same way as 64 bit registers however you cannot store a 64 bit value in a 32 bit register. The
+opposite is true however. 32 bit values can be moved into a 64 bit register. Also, on a 64 bit computer, you can access
+the first 32 bits of a register by using 32 bit register names. For example, I can execute ``move eax, 5'' on a 64 bit
+machine. You can also access the first 16 bits and second 16 bits of eax with al and ah. The high and low 16 bits for
+other registers follow a similar naming pattern. }
+
+\textbf{When you are calling a function in 32 x86 assembly, you do not use the registers to put arguments into a
+function. Instead, arguments are pushed to the stack in reverse. }
+
+\end{document}
