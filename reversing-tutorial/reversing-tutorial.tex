@@ -37,7 +37,6 @@
 \makebox[\textwidth][c]{
 #2
 }
-\caption{#3}
 \label{#1}
 \end{figure}
 }
@@ -46,15 +45,16 @@
 \sitfig{#3}{\includegraphics[#1]{#2}}{#4}
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{document}
 
-\tableofcontents
-
 % TITLE
-\clearpage\setcounter{page}{1}{\centering
-\textbf{Reverse Engineering \& Exploitation Trek-through\newline
-by: Owen Flannagan, Ambrose Douglas, Nick Lang, Elan Rasabi}
-\par}
+\input{title-page}
+\newpage
+\pagecolor{white}
+
+\tableofcontents
 
 \section{Why do we Reverse?}
 \input{why-reverse}
@@ -455,7 +455,7 @@ which agrees with the highest stack address in the top view.}
 \sitgfx[width=6.5in,height=5.1252in]{FINALWORKINGDOCFORMERLYPRECURSOR-img029.png}{fig:unk}{TODO CAPTION}
  
 
-\textbf{main is the execution starting point of programs written in c and c++ for command line. the ``db'' command sets
+\textbf{main is the execution starting point of programs written in C and C++ for command line. the ``db'' command sets
 a breakpoint inside the code of the program. So by typing ``db main'' you set a breakpoint at the beginning of the main
 function, which is the start of the program. (Radare2 actually starts a program and breaks before the main function or
 the program starts.) Other functions can be used the same way. For example if a program had a function in it called
@@ -918,7 +918,7 @@ itsnotthiseasy that is decremented by one. The python script is as follows:}
 \sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img065.png}{fig:unk}{TODO CAPTION}
  
 
-\section{Reversing -- Tips and Tricks}
+\subsection{Tips and Tricks}
 
 \textbf{ \ \ Now that you have gone through a normal static analysis workflow, you can tell that this could become
 incredibly time consuming very quickly. However, there are tons of little tricks that can save you time. Many
@@ -1027,14 +1027,10 @@ found in IDA.}
 
 \subsection{Buffer Overflows}
 
-{\centering
-\textbf{By Ambrose Douglas}
-\par}
-
 \textbf{This tutorial should give a basic understanding of buffer overflows, shellcode, and what first steps to take
 when approaching a ctf-style pwn challenge. The tutorial is for a 64 bit linux (Kali specificially) using radare2
-version 2.3.0 and is aimed to be for beginners. However, some experience with assembly and c or c++ programming
-languages will help dearly. For anyone reading this without any experience in assembly and c, I recommend reading up on
+version 2.3.0 and is aimed to be for beginners. However, some experience with assembly and C or C++ programming
+languages will help dearly. For anyone reading this without any experience in assembly and C, I recommend reading up on
 those topics first.}
 
 \textbf{BuffO\_1.out}
@@ -1109,7 +1105,7 @@ screen. Type ``db main'' and hit enter, then ``dc'' and hit enter again.}
 \sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img080.png}{fig:unk}{TODO CAPTION}
  
 
-\textbf{main is the execution starting point of programs written in c and c++ for command line. the ``db'' command sets
+\textbf{main is the execution starting point of programs written in C and C++ for command line. the ``db'' command sets
 a breakpoint inside the code of the program. So by typing ``db main'' you set a breakpoint at the beginning of the main
 function, which is the start of the program. (Radare2 actually starts a program and breaks before the main function or
 the program starts.) Other functions can be used the same way. For example if a program had a function in it called
@@ -1251,7 +1247,7 @@ screen. Type ``db main'' and hit enter, then ``dc'' and hit enter again.}
 \sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img080.png}{fig:unk}{TODO CAPTION}
  
 
-\textbf{main is the execution starting point of programs written in c and c++ for command line. the ``db'' command sets
+\textbf{main is the execution starting point of programs written in C and C++ for command line. the ``db'' command sets
 a breakpoint inside the code of the program. So by typing ``db main'' you set a breakpoint at the beginning of the main
 function, which is the start of the program. (Radare2 actually starts a program and breaks before the main function or
 the program starts.) Other functions can be used the same way. For example if a program had a function in it called
@@ -1364,7 +1360,7 @@ concept is so important I will illustrate it further with a basic example.}
 0x0002: do stuff after the new\_function{\dots}\newline
 {\dots} 0x0005: new\_function starts here}
 
-\textbf{The call instruction changes the execution of a program. Whenever a function is called in c or c++ this compiles
+\textbf{The call instruction changes the execution of a program. Whenever a function is called in C or C++ this compiles
 down to a call instruction or similar in the assembly. The call instruction pushes the next instruction after the call
 onto the stack. So in our example above, 0x0002 will be pushed onto the stack. Then the programs instruction pointer
 (rip) jumps to the beginning of the new\_function. So the stack would now look like}
