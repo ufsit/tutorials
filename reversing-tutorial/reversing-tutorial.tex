@@ -47,38 +47,19 @@
 }
 
 \begin{document}
+
+\tableofcontents
+
+% TITLE
 \clearpage\setcounter{page}{1}{\centering
 \textbf{Reverse Engineering \& Exploitation Trek-through\newline
 by: Owen Flannagan, Ambrose Douglas, Nick Lang, Elan Rasabi}
 \par}
 
-\textbf{1.0 Why do we Reverse?}
+\section{Why do we Reverse?}
+\input{why-reverse}
 
-\textbf{Reverse Engineering in infoSec, as simply as we can put it, is to take a
-}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{binary, }}\textbf{which is just }
-
-\textbf{another word for a computer program, and figure out what it's trying to do. You run binaries all the time in day
-to day life - when you run your browser, when you run Microsoft Word, when you check the weather on your phone. Every
-time you run a program or application, a binary file made of 1s and 0s tells your device exactly what it needs to do.
-\newline
-\newline
-If you have written code before, you know that before it can do anything, you have to turn that into a program/binary so
-that you can use it. Before that your code is just a useless file. But what if you want to know what's happening under
-the covers when you use Word, or Chrome, or anything else running on your computer? This is done only by Reverse
-Engineering.  \newline
-\newline
-Let's start up our Kali Linux and write up our own code get a better idea. The Linux terminal allow you to access most
-of the applications in your environment from the command line. For windows users, it is equivalent to the command
-prompt application (cmd). Access your terminal by searching ``Terminator'' in the Activities section of the toolbar
-}or\textbf{ selecting the red icon on the dash that looks like }
-%\sitgfx{width=0.4583in,height=0.4689in}{FINALWORKINGDOCFORMERLYPRECURSOR-img001.png}{fig:abc}{Test caption.}
-\includegraphics[width=0.4583in,height=0.4689in]{FINALWORKINGDOCFORMERLYPRECURSOR-img001.png}
- \textbf{. Here you should see a window open with your current user and location in the file system.\newline
-}
-
-{\centering
-\textbf{2.0 Programming and Compiling Hello World}
-\par}
+\subsection{Programming and Compiling Hello World}
 
 {\centering
 \sitgfx[width=6.5in,height=1.778in]{FINALWORKINGDOCFORMERLYPRECURSOR-img002.png}{fig:unk}{TODO CAPTION}
@@ -128,9 +109,7 @@ source code into }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{instr
 for your CPU to execute. You can't tell your CPU ``x = 5'' so your compiler of choice will tell it a series of
 }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{instructions }}\textbf{that represent ``x=5''.}
 
-{\centering
-\textbf{2.1 - We don't always get source code with our programs.}
-\par}
+\subsection{We don't always get source code with our programs.}
 
 \textbf{\newline
 So what would happen if I deleted the source code for hello.c and renamed the binary? Would you have a clue what this
@@ -163,10 +142,10 @@ We'll note that there are a lot of strings for such a tiny program! About 3 quar
 results are actually just to are left from the compilation process. We used the function ``printf'' which on linux is a
 member of}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{ glibc}}\textbf{ (the standard library for C
 programs on Linux). So, the compiler had to bring in glibc in order to know what we meant by printf, hence all the
-glibc/libc related strings.\newline
-\newline
-\newline
-2.0 Looking at the assembly of a binary}
+glibc/libc related strings.
+}
+
+\section{Looking at the assembly of a binary}
 
 \textbf{However, this is only scratching the surface of information we can extract from this binary. \newline
 From here you start learning about the two core ways you can go about reverse engineering a program (Static
@@ -174,7 +153,7 @@ Analysis/Dynamic Analysis) and two of the most powerful tools we recommend you u
 Dynamic). These 2 approaches and their associated tools are at the absolute core of Rev/Exploitation, which is why we
 will be hitting these concepts in depth.\newline
 \newline
-2.1 Static Analysis vs Dynamic Analysis\newline
+\subsection{Static Analysis vs Dynamic Analysis}
 In the simplest explanation I can think of, Static Analysis will show you all the information about your program that
 can be seen without running it and Dynamic Analysis is everything you can learn about the code by running it and seeing
 how it behaves. For me it helps to understand this using an example with high level code like C. \newline
@@ -194,9 +173,9 @@ once you run it, like one that starts by decrypting itself. This is where option
 \textbf{\newline
 For option two, running the program, we will not as easily be able to view all the inner workings of our program, but it
 often shows us enough information to get a strong understanding in a much quicker time. \newline
-\newline
-Intro to Static Analysis}
-\par}
+}}
+
+\subsection{Intro to Static Analysis}
 
 \textbf{Let's open it in IDA Pro. Open IDA(Type into your terminal }cd \~{} \textbf{then }idademo70/ida )\textbf{ , then
 select our binary when prompted. \newline
@@ -257,7 +236,7 @@ registers are small bits of fast storage located on the physical CPU. If you rem
 we run the program, we know that ``hello world!'' gets printed. That encapsulates the functionality of our hello world
 program. }
 
-\textbf{3.0 Analyzing logmein lvl1(aka log) }
+\subsection{Analyzing logmein lvl1(aka log)}
 
 \textbf{Now that we're a little familiar with the basics, let's look at something a little
 }\textbf{\textit{harder}}\textbf{. This program came from the wild (}\textbf{\textcolor{red}{or a CTF maybe)}}\textbf{
@@ -313,8 +292,7 @@ program)\newline
 \textbf{Do you see where printf and scanf come into play? And can you see where check\_password happens? Please go back
 to IDA. At the end of the code block with the ``incorrect. Try again:'' message, there is an arrow that goes back up to
 the block containing check\_password(). This is indicative of a loop, as we saw when we ran the program. The program
-prompts for input, checks it, and if it's wrong, says ``Incorrect. Try Again:'' and waits for more input.  }  [Warning:
-Image ignored] % Unhandled or unsupported graphics:
+prompts for input, checks it, and if it's wrong, says ``Incorrect. Try Again:'' and waits for more input.  }
 \sitgfx[width=6.5in,height=3.028in]{FINALWORKINGDOCFORMERLYPRECURSOR-img016.png}{fig:unk}{TODO CAPTION}
  \textbf{\newline
 Feel free to keep running the binary and trying to guess the password. We're going to find it ourselves. But first, some
@@ -597,14 +575,11 @@ instruction, }cmp dl, al \textbf{does? If your answer was }
 character of the input string, `a' and the character of the password string, U, are the same, then we get to take the
 jump. Feel free to keep stepping through the program and repeating our commands, but I think we've done enough
 reversing on this binary. Let's run it again, this time giving it what we think the password is. In r2, press q to
-return to the r2 console and then type qy to quit radare2. Run log (./log) and give it the password!! }  [Warning:
-Image ignored] % Unhandled or unsupported graphics:
+return to the r2 console and then type qy to quit radare2. Run log (./log) and give it the password!! }
 \sitgfx[width=6.4165in,height=1.3126in]{FINALWORKINGDOCFORMERLYPRECURSOR-img044.png}{fig:unk}{TODO CAPTION}
 \url{https://www.youtube.com/watch?v=5pZa8YobAeg}
 
-{\centering
-\textbf{Reverse Engineering -- Static Analysis Walkthrough}
-\par}
+\section{Reverse Engineering -- Static Analysis Walkthrough}
 
 \textbf{Static analysis is done to help you understand how the program should function before running it. The purpose of
 static analysis is to use the program flow and the assembly code to understand how the program should run and how to
@@ -801,9 +776,7 @@ characters of ``itsnotthiseasy'' to get the correct password! This password woul
 try to understand what should happen and what we would expect to happen. This makes dynamic analysis easier because we
 know what to try and which parts to check.}
 
-{\centering
-\textbf{Dynamic Analysis}
-\par}
+\subsection{Dynamic Analysis}
 
 \textbf{We will use radare2 as a tool to dynamically analyze the program now. While IDA has some debugging features,
 radare2 (commonly referred to as r2) has tons of features to view the variables and stack as you debug a binary, and it
@@ -945,9 +918,7 @@ itsnotthiseasy that is decremented by one. The python script is as follows:}
 \sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img065.png}{fig:unk}{TODO CAPTION}
  
 
-{\centering
-\textbf{Reversing -- Tips and Tricks}
-\par}
+\section{Reversing -- Tips and Tricks}
 
 \textbf{ \ \ Now that you have gone through a normal static analysis workflow, you can tell that this could become
 incredibly time consuming very quickly. However, there are tons of little tricks that can save you time. Many
@@ -1046,9 +1017,7 @@ provided a famous bomb lab from Carnegie Mellon University. This would be tested
 analysis, but you can use static analysis to read each phase and understand how they work. The most important thing is
 to be patient, keep an x86 manual nearby, and make sure to look at the bigger picture!}
 
-{\centering
-\textbf{Exploits}
-\par}
+\section{Exploits}
 
 \textbf{ \ \ We should now look at the functions that are used to see where there could be vulnerabilities. The most
 obvious sore thumb is the gets method. This method is not safe to use because it does not hold bounds. You could enter
@@ -1056,9 +1025,7 @@ any amount of characters and overwrite other parts of memory in the program. Thi
 during the dynamic analysis method, and you will also learn about how to reach that secret ``win'' function that we
 found in IDA.}
 
-{\centering
-\textbf{Buffer Overflows}
-\par}
+\subsection{Buffer Overflows}
 
 {\centering
 \textbf{By Ambrose Douglas}
@@ -1189,9 +1156,7 @@ and Stack will be focused on today but I recommend reading up on RELRO, PIE (Pos
 the Global Offset Table works for further development after you have a grasp of the others. To fully understand how
 each of these mitigation techniques work and how they can be circumvented, we need a little background.}
 
-{\centering
-\textbf{Mitigation Techniques}
-\par}
+\subsection{Mitigation Techniques}
 
 \textbf{In checksec's output, we saw the line marked Stack: No canary found. Canary's are special secret numbers that
 the computer places onto the stack. This way, if someone overwrites a section of memory they are not supposed to, the
@@ -1218,9 +1183,7 @@ change each time you close and reopen the program. If you want to turn off ASLR 
 \textbf{Don't develop a crutch by relying on this all the time though! Also, I would not recommend permanently disabling
 it on your computer for security reasons.}
 
-{\centering
-\textbf{Running Radare2}
-\par}
+\subsection{Running Radare2}
 
 \textbf{Now for the good stuff!}
 
@@ -1333,9 +1296,7 @@ then run ``dc'' to finish the call to sym.imp.puts. At this point, you should hi
 and make sure you can run these commands again. Feel free to play around with entering a command then ``?'' to try to
 get help.}
 
-{\centering
-\textbf{Explanation of the assembly}
-\par}
+\subsection{Explanation of the assembly}
 
 \textbf{The function prologue}
 
@@ -1524,9 +1485,7 @@ a memory address of a function we wanted to call over the stack? Instead of cras
 jumps to this unexpected function and starts running it. This is called a buffer overflow vulnerability and can be used
 to call functions that spawn shells, connect to the internet, or other nefarious deeds.}
 
-{\centering
-\textbf{Exploitation}
-\par}
+\subsection{Exploitation}
 
 \textbf{Lets try to buffer overflow our program Buff0\_1.out!}
 
