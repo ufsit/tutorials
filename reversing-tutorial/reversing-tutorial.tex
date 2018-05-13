@@ -9,16 +9,14 @@
 \usepackage{parskip}
 \usepackage[english]{babel}
 \usepackage{color}
-\usepackage[top=0in,bottom=1in,left=1in,right=1in,includehead,head=1in,headsep=0.9602in,nofoot]{geometry}
+\usepackage[top=0in,bottom=1in,left=1in,right=1in,includehead,head=1in,headsep=0.9602in]{geometry}
 \usepackage{array}
 \usepackage{hhline}
 \usepackage{hyperref}
 \usepackage{float}
 \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, filecolor=blue, urlcolor=blue}
 \usepackage{graphicx}
-% Footnote rule
-\setlength{\skip\footins}{0.0469in}
-\renewcommand\footnoterule{\vspace*{-0.0071in}\setlength\leftskip{0pt}\setlength\rightskip{0pt plus 1fil}\noindent\textcolor{black}{\rule{0.0\columnwidth}{0.0071in}}\vspace*{0.0398in}}
+
 \title{}
 \author{}
 \date{}
@@ -62,7 +60,7 @@
 \subsection{Programming and Compiling Hello World}
 
 {\centering
-\sitgfx[width=6.5in,height=1.778in]{FINALWORKINGDOCFORMERLYPRECURSOR-img002.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=1.778in]{reversing-img002.png}{fig:unk}{TODO CAPTION}
  \par}
 \textbf{Here you can see my terminal open on the machine name(kali:\~{} root\#), kali, as user root, with \~{} symbol
 letting me know I am in the home directory. Pressing Ctrl+L will clear the screen for me whenever I need.\newline
@@ -73,7 +71,7 @@ editor you like, but I'll use }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11
 simple.\newline
 Type in terminal:}\textit{ leafpad hello.c\newline
 \ \ }  
-\sitgfx[width=4.8693in,height=3.1602in]{FINALWORKINGDOCFORMERLYPRECURSOR-img003.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=4.8693in,height=3.1602in]{reversing-img003.png}{fig:unk}{TODO CAPTION}
  \textbf{ }
 
 \textbf{This opens a text editor for me to write my program in. So let's do that. Write it yourself, even if you are not
@@ -82,19 +80,19 @@ this:}
 
 \textbf{\newline
 \ \ }  
-\sitgfx[width=4.3854in,height=1.302in]{FINALWORKINGDOCFORMERLYPRECURSOR-img004.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=4.3854in,height=1.302in]{reversing-img004.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Now let's turn our code into a binary(which will be 32-bit, not 64, for reasons later explained).}
 
   
-\sitgfx[width=6.5in,height=0.5555in]{FINALWORKINGDOCFORMERLYPRECURSOR-img005.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=0.5555in]{reversing-img005.png}{fig:unk}{TODO CAPTION}
  \textbf{\newline
 Listing (ls) the content in our file location now shows two hello files: \newline
 {}-hello.c: our C source code\newline
 {}-hello\_binary: our binary created from our source file\newline
 \ \ }  
-\sitgfx[width=4.7602in,height=0.6146in]{FINALWORKINGDOCFORMERLYPRECURSOR-img006.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=4.7602in,height=0.6146in]{reversing-img006.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Running (./) hello\_binary achieved our objective, outputting the string we printed}
@@ -128,14 +126,14 @@ program was compiled to run on. More specifically, 32-bit, which refers to the s
 }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{registers }}\textbf{of said CPU(more on those in a bit).}
 
 \textbf{ }  
-\sitgfx[width=6.5in,height=0.6252in]{FINALWORKINGDOCFORMERLYPRECURSOR-img007.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=0.6252in]{reversing-img007.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{So that's cool, but what else is in this program? The
 }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{strings }}\textbf{command lists all of the human-readable
 strings in the binary of length 4 or greater. \newline
 }  
-\sitgfx[width=6.5in,height=3.5138in]{FINALWORKINGDOCFORMERLYPRECURSOR-img008.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=3.5138in]{reversing-img008.png}{fig:unk}{TODO CAPTION}
  \textbf{\newline
 We'll note that there are a lot of strings for such a tiny program! About 3 quarters of the way down, note our string
 ``hello world!'' from the source code. The compiler and version we used are a little bit below it. A lot of these
@@ -182,7 +180,7 @@ select our binary when prompted. \newline
 Once IDA finishes loading, it should look like this: }
 
 {\centering   
-\sitgfx[width=5.3957in,height=5.052in]{FINALWORKINGDOCFORMERLYPRECURSOR-img009.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.3957in,height=5.052in]{reversing-img009.png}{fig:unk}{TODO CAPTION}
  \par}
 \textbf{What does all this crap mean?? At least we can see our string ``}Hello World!\textbf{{}''. \newline
 We're going to take a break from the idea of hello world and dig into some
@@ -194,7 +192,7 @@ except the following block:}
 \textbf{\newline
 \newline
  }  
-\sitgfx[width=4.8126in,height=1.0209in]{FINALWORKINGDOCFORMERLYPRECURSOR-img010.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=4.8126in,height=1.0209in]{reversing-img010.png}{fig:unk}{TODO CAPTION}
  
 \par}
 
@@ -230,7 +228,7 @@ registers are small bits of fast storage located on the physical CPU. If you rem
 
 {\centering
   
-\sitgfx[width=1.9583in,height=1.8752in]{FINALWORKINGDOCFORMERLYPRECURSOR-img011.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=1.9583in,height=1.8752in]{reversing-img011.png}{fig:unk}{TODO CAPTION}
  \par}
 \textbf{So we know that a pointer to (the address of) our string gets put into edx and that puts gets called. And when
 we run the program, we know that ``hello world!'' gets printed. That encapsulates the functionality of our hello world
@@ -252,14 +250,14 @@ Desktop/rev\_be101/binaries and open our file }log. \textbf{We'll land in }\text
 some reason you navigate away from this screen, double click ``main'' on the functions screen. If your graph view turns
 funky, try pressing the spacebar to get back to the graph.}  
 % Unhandled or unsupported graphics:
-\sitgfx[width=6.5in,height=3.2638in]{FINALWORKINGDOCFORMERLYPRECURSOR-img012.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=3.2638in]{reversing-img012.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Let's scroll down a bit with the arrow keys or mouse drag (about 2 boxes, to the circled portion) until we see
 this:  }
 
   
-\sitgfx[width=6.5in,height=3.4862in]{FINALWORKINGDOCFORMERLYPRECURSOR-img013.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=3.4862in]{reversing-img013.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{From this one screenshot we }\textbf{\textit{can}}\textbf{ see pretty much the entire functionality of this
@@ -273,7 +271,7 @@ example, except instead of edx and puts, it's eax and printf. Go back and look a
 that looked like.}
 
   
-\sitgfx[width=6.5in,height=4.611in]{FINALWORKINGDOCFORMERLYPRECURSOR-img014.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.611in]{reversing-img014.png}{fig:unk}{TODO CAPTION}
  \textbf{\newline
 The second call is to scanf, another familiar function from C. We see that \%s gets put into eax and pushed before scanf
 gets called. Before that, a }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{local variable
@@ -286,14 +284,14 @@ are the arguments for these functions, you'd be right. And we know all without e
 and run the program now with our newfound knowledge and see what happens. (ctrl+c exits the currently running
 program)\newline
 }  
-\sitgfx[width=6.5in,height=1.139in]{FINALWORKINGDOCFORMERLYPRECURSOR-img015.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=1.139in]{reversing-img015.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Do you see where printf and scanf come into play? And can you see where check\_password happens? Please go back
 to IDA. At the end of the code block with the ``incorrect. Try again:'' message, there is an arrow that goes back up to
 the block containing check\_password(). This is indicative of a loop, as we saw when we ran the program. The program
 prompts for input, checks it, and if it's wrong, says ``Incorrect. Try Again:'' and waits for more input.  }
-\sitgfx[width=6.5in,height=3.028in]{FINALWORKINGDOCFORMERLYPRECURSOR-img016.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=3.028in]{reversing-img016.png}{fig:unk}{TODO CAPTION}
  \textbf{\newline
 Feel free to keep running the binary and trying to guess the password. We're going to find it ourselves. But first, some
 more assembly. \newline
@@ -310,7 +308,7 @@ called before these instructions was check\_password, we can assume that check\_
 if check\_password returns 1, we take the red path(win). If it returns 0, we take the green path(lose/try again). Even
 though we haven't even figured out how to win, we know so much about the program! \newline
 }  
-\sitgfx[width=6.4583in,height=4.5728in]{FINALWORKINGDOCFORMERLYPRECURSOR-img017.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.4583in,height=4.5728in]{reversing-img017.png}{fig:unk}{TODO CAPTION}
  \textbf{\newline
 Now let's get into the meat of the program. Double-click on the word check\_password on the graph, or double click on it
 from the functions window (it's right below main). Take a minute or two to familiarize yourself with the structure of
@@ -318,7 +316,7 @@ the function, and recall everything we know about what happens with this functio
 check\_password returns 0, we lose and try again, and if it returns 1, we win! Let's start at the very end of the
 function, the win and lose conditions, and work our way back. }  
 % Unhandled or unsupported graphics:
-\sitgfx[width=6.5in,height=3.8055in]{FINALWORKINGDOCFORMERLYPRECURSOR-img018.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=3.8055in]{reversing-img018.png}{fig:unk}{TODO CAPTION}
  
 \par}
 
@@ -339,17 +337,17 @@ because \textit{ebp} stands for \textit{base pointer} - it points to the \textit
 see that red arrow that also points to the return block. Double click it or follow it back up.}
 
 {\centering   
-\sitgfx[width=3.1146in,height=4.4272in]{FINALWORKINGDOCFORMERLYPRECURSOR-img019.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=3.1146in,height=4.4272in]{reversing-img019.png}{fig:unk}{TODO CAPTION}
  \par}
 \textbf{The light blue arrow is the same one previously mentioned. Could it be the win condition?? Let's take a closer
 look at the code block above it.}
 
 {\centering   
-\sitgfx[width=4.6354in,height=1.5in]{FINALWORKINGDOCFORMERLYPRECURSOR-img020.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=4.6354in,height=1.5in]{reversing-img020.png}{fig:unk}{TODO CAPTION}
 \par}
 \textbf{We see some old friends, and some new ones. This }\textbf{\textit{test}}\textbf{ instruction looks kind of
 familiar but also kind of wrong! }  
-\sitgfx[width=6.5in,height=4.8752in]{FINALWORKINGDOCFORMERLYPRECURSOR-img021.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.8752in]{reversing-img021.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{It appears AL is the lowest 8 bits of the EAX register. So }\textit{test} al, al\textbf{ is really
@@ -360,16 +358,16 @@ to another that is located somewhere in the program. We could continue staticall
 find the location of the victory string, but we would never be able to determine exactly what the password is. For
 this, we turn to dynamic analysis. We'll be using a tool called radare2, a combined disassembler and debugger. } 
 
-\sitgfx[width=6.5in,height=4.3335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img022.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.3335in]{reversing-img022.png}{fig:unk}{TODO CAPTION}
  \textbf{To open this file in debug mode in radare2, type `}r2 -d log'\textbf{, then after it gets open, `}aaa'\textbf{
 and then `}afl\textbf{{}'. Aaa tells r2 to analyze all functions, and afl tells it to list the analyzed functions.}
 
   
-\sitgfx[width=6.5in,height=4.1807in]{FINALWORKINGDOCFORMERLYPRECURSOR-img023.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.1807in]{reversing-img023.png}{fig:unk}{TODO CAPTION}
  
 
   
-\sitgfx[width=6.5in,height=4.9028in]{FINALWORKINGDOCFORMERLYPRECURSOR-img024.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.9028in]{reversing-img024.png}{fig:unk}{TODO CAPTION}
  \textbf{\newline
 We see some old and tired friends! Type `}s main' \textbf{to instruct r2 to seek to main, then `}db main' \textbf{and
 `}dc\textbf{{}' to instruct radare to set a breakpoint at main and then continue until the breakpoint.}
@@ -377,7 +375,7 @@ We see some old and tired friends! Type `}s main' \textbf{to instruct r2 to seek
 \textbf{Now type ``V'' then enter to open visual mode}
 
   
-\sitgfx[width=6.5in,height=4.2362in]{FINALWORKINGDOCFORMERLYPRECURSOR-img025.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.2362in]{reversing-img025.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{The first visual mode is a basic hexdump of the binary. This can be useful at times but we will go for a
@@ -385,7 +383,7 @@ different view for now. type ``p'' twice without hitting enter. Anything look fa
 IDA, just now in radare's format with some bonus info.}
 
   
-\sitgfx[width=6.5in,height=4.7362in]{FINALWORKINGDOCFORMERLYPRECURSOR-img026.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.7362in]{reversing-img026.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{This may be a little bit to take in if this is completely new to you so take a deep breath, but don't worry.
@@ -395,7 +393,7 @@ the display. The rows of 0x00000000's with labels are the
 screen is a view of the }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{stack}}\textbf{.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img027.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img027.png}{fig:unk}{TODO CAPTION}
 \textcolor{red}{***** Don't know much about how a Stack works? Read below. If you are well informed, skip
 this*****}\newline
 \textbf{The Stack}
@@ -445,14 +443,14 @@ is0x565d054d.}\textbf{\textcolor{red}{ }}\textbf{(The IP of EIP stands for Instr
 instruction in memory.}
 
   
-\sitgfx[width=6.5in,height=5.6665in]{FINALWORKINGDOCFORMERLYPRECURSOR-img028.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=5.6665in]{reversing-img028.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{The register esp is used to point to the top of the stack. As you can see, the address in esp is 0xffd3008c
 which agrees with the highest stack address in the top view.}
 
   
-\sitgfx[width=6.5in,height=5.1252in]{FINALWORKINGDOCFORMERLYPRECURSOR-img029.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=5.1252in]{reversing-img029.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{main is the execution starting point of programs written in C and C++ for command line. the ``db'' command sets
@@ -473,14 +471,14 @@ the call to check\_password by bringing up command entry with :, then typing }db
 use tab to autocomplete here as well).  If you run ``dc'' now, you will see the execution of the program. First,
 ``Please enter a word or character:'' is printed to the screen}  
 % Unhandled or unsupported graphics:
-\sitgfx[width=6.5in,height=5.3335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img030.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=5.3335in]{reversing-img030.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{I gave it the word ``asdf''. I pressed enter after typing asdf just like when we ran the program before, and I
 get the message hit breakpoint at: 565d0625. Press enter to return to visual mode. Did you notice the change? Instead
 of being in }main\textbf{ we're now in }sym.check\_password\textbf{! }  
 % Unhandled or unsupported graphics:
-\sitgfx[width=6.5in,height=5.2083in]{FINALWORKINGDOCFORMERLYPRECURSOR-img031.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=5.2083in]{reversing-img031.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{There are some other things to note here as well. In the stack view(top block) , at the very end of the visible
@@ -489,13 +487,13 @@ breakpoint after the program initializes its local variables (}:, \textbf{then }
 enter- pro tip- select the memory address with your mouse and middle click it to copy and paste in one click!). Then,
 press }: \textbf{and type }dc \textbf{then press enter to continue to the next breakpoint. R2 should tell you ``hit
 breakpoint at }0x5664a63c.\textbf{{}'' }  
-\sitgfx[width=6.5in,height=5in]{FINALWORKINGDOCFORMERLYPRECURSOR-img032.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=5in]{reversing-img032.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Let's get debugging. Press ``s'' to single step through the program. You will notice the highlighted memory
 address will move down to the jmp instruction. Press ``s'' again and we will end up in a block of familiar code!} 
 
-\sitgfx[width=6.5in,height=3.778in]{FINALWORKINGDOCFORMERLYPRECURSOR-img033.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=3.778in]{reversing-img033.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Let's take a step away from the flow of the program to examine the values in the registers. Before we execute
@@ -503,7 +501,7 @@ any of this block, we see that there are some values currently stored in eax and
 of meaning to us at this moment. Press ``s'' twice so that the highlighted instruction is: \newline
 }0x565cf672  \ \ 01d0  \ \ add eax, edx\newline
   
-\sitgfx[width=6.5in,height=1.4445in]{FINALWORKINGDOCFORMERLYPRECURSOR-img034.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=1.4445in]{reversing-img034.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{We see that both edx and eax have new values! Edx got 0x000000000 (aka 0) and eax got 0xffb57da8! What the heck
@@ -515,7 +513,7 @@ We can get the data at this memory address by pressing `:' and issuing the comma
 in x86 assembly. When we type }pxw \_nbytes\_ @ memory \textbf{, it's just like saying ``get nbytes from [memory].''We
 see our input string that we entered when the program was in main!!!!  Let's keep going.}\newline
    
-\sitgfx[width=6.5in,height=1.389in]{FINALWORKINGDOCFORMERLYPRECURSOR-img035.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=1.389in]{reversing-img035.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Press ``s'' 2 more times so that the highlighted instruction is  \ \ }
@@ -523,24 +521,24 @@ see our input string that we entered when the program was in main!!!!  Let's kee
 0x565cf677\ \ 84c0  \ \ test al, al
 
   
-\sitgfx[width=6.5in,height=2.5138in]{FINALWORKINGDOCFORMERLYPRECURSOR-img036.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=2.5138in]{reversing-img036.png}{fig:unk}{TODO CAPTION}
 \textbf{The first time we pressed s just now, nothing changed. It added edx to eax, which was adding 0 to a number, no
 effect. The next instruction is more interesting. Wise persons might recognize, even without knowing what the movzx
 instruction does, that eax contains the hex representation of an ASCII value. Some quick googling reveals that eax now
 contains the ASCII representation of the letter ``a'', Hx 61 in the chart. We even reverse engineered the functionality
 of }  
-\sitgfx[width=6.3543in,height=0.2291in]{FINALWORKINGDOCFORMERLYPRECURSOR-img037.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.3543in,height=0.2291in]{reversing-img037.png}{fig:unk}{TODO CAPTION}
  !\newline
 \textbf{We figured out that it moves 1 byte (the size of a char in C) from operand2 into operand1.  More specifically,
 in this instance it moves a byte from the address that eax currently holds ([}0xffb57da8] = asdf = 0x66647361\textbf{)
 and puts it into eax. Let's keep going. Press ``s'' through the test and jump instructions(2x) ,and then 3 more times
 so we're looking at this screen.}  
-\sitgfx[width=6.5in,height=1.8335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img038.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=1.8335in]{reversing-img038.png}{fig:unk}{TODO CAPTION}
  
 
 \begin{center}
  
-  \sitgfx[width=1.6043in,height=4.9272in]{FINALWORKINGDOCFORMERLYPRECURSOR-img039.png}{fig:unk}{TODO CAPTION}
+  \sitgfx[width=1.6043in,height=4.9272in]{reversing-img039.png}{fig:unk}{TODO CAPTION}
 
 \end{center}
 \textbf{We see the same functionality from the last block we analyzed, albeit with some more instructions. This time, it
@@ -550,25 +548,25 @@ Cool. Let's keep stepping to try to figure out what happens next. It moves a loc
 4h, which we know is 0, into ecx. Verify that as well. The next instruction is juicy. One of the function arguments
 gets moved into eax! Let's do} : \textbf{then }pxw 50 @ eax.   
 % Unhandled or unsupported graphics:
-\sitgfx[width=6.5in,height=4.5138in]{FINALWORKINGDOCFORMERLYPRECURSOR-img040.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.5138in]{reversing-img040.png}{fig:unk}{TODO CAPTION}
  
 
 \begin{center}
  
-  \sitgfx[width=1.8543in,height=0.2189in]{FINALWORKINGDOCFORMERLYPRECURSOR-img041.png}{fig:unk}{TODO CAPTION}
+  \sitgfx[width=1.8543in,height=0.2189in]{reversing-img041.png}{fig:unk}{TODO CAPTION}
 
 \end{center}
 \textbf{EAX now holds the memory address of (a pointer to) a string that we did not enter!! So EDX holds the address of
 our input string and EAX holds a foreign string. What happens next?After a useless }add eax,ecx\textbf{, our new friend
 movzx moves a byte(character) from the string pointed to by eax into eax! }  
 % Unhandled or unsupported graphics:
-\sitgfx[width=6.5in,height=2.0555in]{FINALWORKINGDOCFORMERLYPRECURSOR-img042.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=2.0555in]{reversing-img042.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{So now we have our 0x61 (lowercase A) in edx, and 0x55 (capital U) in eax. Can you guess what the next
 instruction, }cmp dl, al \textbf{does? If your answer was }  
 % Unhandled or unsupported graphics:
-\sitgfx[width=6.5in,height=1.8055in]{FINALWORKINGDOCFORMERLYPRECURSOR-img043.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=1.8055in]{reversing-img043.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{You'd be correct! The cmp instruction sets the Zero Flag to 1 only if the two operands are equal. So, if the
@@ -576,7 +574,7 @@ character of the input string, `a' and the character of the password string, U, 
 jump. Feel free to keep stepping through the program and repeating our commands, but I think we've done enough
 reversing on this binary. Let's run it again, this time giving it what we think the password is. In r2, press q to
 return to the r2 console and then type qy to quit radare2. Run log (./log) and give it the password!! }
-\sitgfx[width=6.4165in,height=1.3126in]{FINALWORKINGDOCFORMERLYPRECURSOR-img044.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.4165in,height=1.3126in]{reversing-img044.png}{fig:unk}{TODO CAPTION}
 \url{https://www.youtube.com/watch?v=5pZa8YobAeg}
 
 \section{Reverse Engineering -- Static Analysis Walkthrough}
@@ -607,7 +605,7 @@ file. Make sure that IDA will auto-comment, and select ``OK'' to proceed. After 
 program, you should get a screen that looks like the following:}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img045.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img045.png}{fig:unk}{TODO CAPTION}
  \textbf{This is the graph mode of IDA, and it presents the functions as series of connected boxes presented as jumps.
 The other main view of IDA is known as the text view, and it presents all of the information as it is loaded into RAM.
 This is more confusing to read and involves the format of the ELF file and all of it's sections, so we will start by
@@ -633,7 +631,7 @@ subviews'' and ``Strings''. The keyboard shortcut for the strings subview is Shi
 subview, you should see the following screen:}
 
   
-\sitgfx[width=6.1252in,height=3.8335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img046.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.1252in,height=3.8335in]{reversing-img046.png}{fig:unk}{TODO CAPTION}
  \textbf{Most of these strings are function names, and they are linked to the libc functions that we import in the
 stdio.h file that I previously mentioned. These all have an address that begins with LOAD, as can be seen. This means
 that they are used when the program loads libc and imports the functions and references that will be used. After these,
@@ -668,7 +666,7 @@ are referenced, and it can be seen that they are only declared and never used. O
 IDA commonly uses the offset ``s'' to refer to strings. In the first block everything up to ``lea'' is used to set up
 the stack and position the memory, so this can be better analyzed in dynamic analysis. }  
 % Unhandled or unsupported graphics:
-\sitgfx[width=6.4583in,height=2.4791in]{FINALWORKINGDOCFORMERLYPRECURSOR-img047.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.4583in,height=2.4791in]{reversing-img047.png}{fig:unk}{TODO CAPTION}
  \textbf{Once we reach the lea, knowledge of x86 assembly language becomes incredibly important. I always try to keep a
 reference manual at hand in case I do not recognize an instruction, but Google often turns out to be the biggest help.
 Lea stands for ``load effective address'', so it pretty much functions as a way to store a pointer. In this case, the
@@ -705,7 +703,7 @@ or endpoints.}
 green jump is taken. Decisions are being made, which seems scary! But don't worry, there are only two options for the
 flow at this time. The first time, unless no input is given, 0 must be less than the size. This means we will follow
 the green arrow to the next box. }  
-\sitgfx[width=2.5937in,height=2.3335in]{FINALWORKINGDOCFORMERLYPRECURSOR-img048.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=2.5937in,height=2.3335in]{reversing-img048.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{We will approach this section like we did with the previous boxes. At first, the pointer of the string is loaded
@@ -733,7 +731,7 @@ outcome, it may make more sense.}
 \textbf{Now that we have traversed the word, we can follow the red arrow.}
 
   
-\sitgfx[width=6.4898in,height=3.948in]{FINALWORKINGDOCFORMERLYPRECURSOR-img049.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.4898in,height=3.948in]{reversing-img049.png}{fig:unk}{TODO CAPTION}
  \textbf{Firstly, the pointer to the string ``itsnotthiseasy'' is loaded into eax, which is then pushed onto the stack.
 This is referenced to as argument s2. The string in memory that we entered and that had each character incremented by 1
 is then loaded into eax and pushed onto the stack as argument s1, and strcmp is called. This compares the two strings,
@@ -742,13 +740,13 @@ or not. If it is zero, it sets a special zero flag. If this zero flag is not set
 string ``Mission failed, we'll get them next time.'' is printed. This is a long string, so you can double click
 ``aMissionFailedW'' to go to that section of memory and read the whole string.}  
 % Unhandled or unsupported graphics:
-\sitgfx[width=6.5in,height=0.6563in]{FINALWORKINGDOCFORMERLYPRECURSOR-img050.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=0.6563in]{reversing-img050.png}{fig:unk}{TODO CAPTION}
  \textbf{27h is used to refer to the single quote because that is it's ASCII value and it is a special character in this
 case. This allows it to be used in the string even if it is used to denote the start or stop of a string here. To go
 back to the previous part, click on the back facing arrow above the function list.}
 
   
-\sitgfx[width=4.1252in,height=2.1772in]{FINALWORKINGDOCFORMERLYPRECURSOR-img051.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=4.1252in,height=2.1772in]{reversing-img051.png}{fig:unk}{TODO CAPTION}
  \textbf{\newline
 This example of stepping backwards in our analysis can also be seen as a usage of a cross reference. A cross reference
 is a location in the program in which this function or string is called and used, and it can be a useful way of finding
@@ -757,7 +755,7 @@ right click on it and select ``List cross references to.'' This can also be done
 When you do this, you should see the following:}
 
   
-\sitgfx[width=6.4898in,height=1.6043in]{FINALWORKINGDOCFORMERLYPRECURSOR-img052.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.4898in,height=1.6043in]{reversing-img052.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{This is the location in the graph in which we found this string, because it was the code that loaded the pointer
@@ -787,18 +785,18 @@ enter because you can change the register values later on to reach your goals. W
 radare2 and seek to main.}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img053.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img053.png}{fig:unk}{TODO CAPTION}
  \textbf{Now, recall the IDA graph that we analyzed, and remember that the final jump to either correct or failure.
 Before this jump is taken, the ``test eax, eax'' instruction is used to determine if the value in eax is zero or not,
 setting the zero flag. Use the arrows to scroll through the main function in radare2 and set a breakpoint at the ``test
 eax, eax'' instruction. Now, continue and hit this point.}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img054.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img054.png}{fig:unk}{TODO CAPTION}
  \textbf{We will change the value in the register eax to be zero. This way, the JNE instruction (jump if not equal to)
 will evaluate to false and not be taken. This should print the affirmative response. To do this, type ``:dr eax=0''.
 You can see the value of the eax register change to 0. }  
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img055.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img055.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{After you do this, step twice to see if the jump is taken or not. You will see that the jump is not taken! By
@@ -813,11 +811,11 @@ Now, type ``a'' and you will be prompted to enter assembler opcodes.  You will w
 place of the jump not equal instruction.}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img056.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img056.png}{fig:unk}{TODO CAPTION}
  
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img057.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img057.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{We use two because a NOP is one byte and a JNE is 2 bytes in length. A NOP instruction stands for ``no
@@ -834,7 +832,7 @@ in IDA as they are called. They are highlighted into a light green color at the 
 functions that are called.}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img053.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img053.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{In order to see what the puts function is doing, let's put a breakpoint after puts and debug continue until that
@@ -849,7 +847,7 @@ given to them automatically. So to see the value at ebx use ``pxw 0x20 @ ebx'', 
 for print hexadecimal (x) word. A word is 4 bytes in length. }
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img058.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img058.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{After this, we know that the gets function takes user input because it is a commonly used libc function. To find
@@ -861,11 +859,11 @@ variable where our input is stored. This can be determined by the man page for g
 always a good idea to use the man pages for unknown libc functions. Single step to the call.}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img059.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img059.png}{fig:unk}{TODO CAPTION}
  
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img060.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img060.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Right now, you should use shift s to step over the gets call. This is important because the code for the gets
@@ -880,7 +878,7 @@ this, let's try to find the precise location that the input is stored at. To do 
 same value as eax, which shows that the gets function returns the value of the pointer to the input.}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img061.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img061.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Note that the same ebp-0x24 value is the argument to sym.imp.strlen. place a breakpoint after the call to strlen
@@ -891,7 +889,7 @@ the compare jumps if the value in ebp-0xc is lower then the value in ebp-0x10. S
 by one until it reaches the length of our string.}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img062.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img062.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Looping at the code inside the loop, we see that the loop takes the address of our string and counts upward
@@ -899,13 +897,13 @@ through each letter in the string, and adds one to the ascii value in each lette
 `b' becomes `c').}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img063.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img063.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Next we see that the binary is calling a string compare. Let's see what is being compared to our input.}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img064.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img064.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Well, now we think we may know what the password entered should be. Now, I'll reset the instruction pointer to
@@ -915,7 +913,7 @@ the beginning of main by executing dr eip = 0x565fd5dc. (This address may be dif
 itsnotthiseasy that is decremented by one. The python script is as follows:}
 
   
-\sitgfx[width=6.5in,height=4.0626in]{FINALWORKINGDOCFORMERLYPRECURSOR-img065.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img065.png}{fig:unk}{TODO CAPTION}
  
 
 \subsection{Tips and Tricks}
@@ -931,7 +929,7 @@ provided the source code  for the program. It is in the c\_constructs.c file, wh
 you analyze.}
 
   
-\sitgfx[width=3in,height=4.1252in]{FINALWORKINGDOCFORMERLYPRECURSOR-img066.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=3in,height=4.1252in]{reversing-img066.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{To help you understand what the size is of each character, you can see what kind of memory location they are
@@ -944,7 +942,7 @@ strings and characters are probably being used. If there are dwords being used i
 more likely that it is some sort of passcode with numbers.}
 
   
-\sitgfx[width=6.4898in,height=3.802in]{FINALWORKINGDOCFORMERLYPRECURSOR-img067.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.4898in,height=3.802in]{reversing-img067.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{This is an example of a for loop. The variable labelled ``var\_40'' is the counter that loops through the for
@@ -956,7 +954,7 @@ assembly language line by line, but looking at the boxes before and after the ar
 about the functionality.}
 
   
-\sitgfx[width=6.5in,height=3.9374in]{FINALWORKINGDOCFORMERLYPRECURSOR-img068.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=3.9374in]{reversing-img068.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Here are two other loop examples. The loop on the right is taken first because var\_40 is still 10 from the
@@ -967,7 +965,7 @@ loop. This can be seen because of the arrow pointing upwards into the same box. 
 {}``f'' indicate floating point instructions, and these are used when floats or doubles are used in computations.}
 
   
-\sitgfx[width=6.4898in,height=0.6252in]{FINALWORKINGDOCFORMERLYPRECURSOR-img069.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.4898in,height=0.6252in]{reversing-img069.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{A switch can be easily distinguished by the long row of boxes. All of these boxes are aligned and are referenced
@@ -976,7 +974,7 @@ eax'' instruction rather than a jump based on the comparison of values. Many dif
 these pointers can be used based on the case of the switch.}
 
   
-\sitgfx[width=2.8646in,height=1.2083in]{FINALWORKINGDOCFORMERLYPRECURSOR-img070.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=2.8646in,height=1.2083in]{reversing-img070.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{When a function is called in this program, the add function, the arguments are pushed onto the stack in reverse
@@ -988,7 +986,7 @@ these, and then they are located in higher memory than the stack pointer esp onc
 stack frame is created. }
 
   
-\sitgfx[width=3.3646in,height=3.7602in]{FINALWORKINGDOCFORMERLYPRECURSOR-img071.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=3.3646in,height=3.7602in]{reversing-img071.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{In the called function, the new frame is created without subtracting esp at all. This is because no new
@@ -997,7 +995,7 @@ assembly language, so you can safely assume for most conventions that eax holds 
 called function until anything else is placed in the register.}
 
   
-\sitgfx[width=6.5in,height=4.5311in]{FINALWORKINGDOCFORMERLYPRECURSOR-img072.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=6.5in,height=4.5311in]{reversing-img072.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Here you can see how the hardcoded array is placed into memory. All of the integers are placed into memory
@@ -1040,7 +1038,7 @@ BuffO\_1.out. A good first step when approaching a binary problem is to scout a 
 BuffO\_1.out''}
 
   
-\sitgfx[width=5.8335in,height=0.7665in]{FINALWORKINGDOCFORMERLYPRECURSOR-img073.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=0.7665in]{reversing-img073.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{Output of file BuffO\_1.out}
@@ -1049,17 +1047,17 @@ BuffO\_1.out''}
 said PE32+ executable, x86-64 then the file would be a binary built for windows.}
 
   
-\sitgfx[width=5.8335in,height=0.9602in]{FINALWORKINGDOCFORMERLYPRECURSOR-img074.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=0.9602in]{reversing-img074.png}{fig:unk}{TODO CAPTION}
  
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img075.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img075.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Now type ``V'' then enter to open visual mode}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img076.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img076.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{output from v}
@@ -1068,7 +1066,7 @@ said PE32+ executable, x86-64 then the file would be a binary built for windows.
 different view for now. type ``p'' twice without hitting enter.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img077.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img077.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{This may be a little bit to take in if this is completely new to you so take a deep breath, but don't worry.
@@ -1077,7 +1075,7 @@ the display. The rows of 0x00000000's with labels are the registers of the compu
 view of the stack.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img027.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img027.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{For those new to assembly, registers are like variables for assembly. You can move data into and out of
@@ -1087,14 +1085,14 @@ rip is 0x7f3016a9bea0 and if we look at the code at the bottom panel we see this
 memory.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img078.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img078.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{The register rsp is used to point to the top of the stack. As you can see, the address in rsp is 0x7ffc2d515cf0
 which agrees with the highest stack address in the top view.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img079.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img079.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{To see where execution of the program actually begins type the colon : without hitting enter. Sometimes r2 is
@@ -1102,7 +1100,7 @@ glitchy and you may have to hit it twice. You should see a tab for command execu
 screen. Type ``db main'' and hit enter, then ``dc'' and hit enter again.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img080.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img080.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{main is the execution starting point of programs written in C and C++ for command line. the ``db'' command sets
@@ -1119,7 +1117,7 @@ breakpoint. or using a minus (-) in the ``db'' command. For example ``db -main''
 start of main.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img081.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img081.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Set breakpoints after each of the ``call'' instructions in main and you should see b's next to their
@@ -1127,7 +1125,7 @@ instructions. If you run ``dc'' now, you will see the execution of the program. 
 to the screen}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img082.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img082.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{output from the program that says Password Please}
@@ -1138,11 +1136,11 @@ to the screen}
 for windows.}
 
   
-\sitgfx[width=5.8335in,height=0.9602in]{FINALWORKINGDOCFORMERLYPRECURSOR-img074.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=0.9602in]{reversing-img074.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Now run ``checksec Buff0\_1.out''}  
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img083.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img083.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{Output of checksec BuffO\_1.out shows different mitigation techniques for exploitation.}
@@ -1187,7 +1185,7 @@ it on your computer for security reasons.}
 You should see a output similar to below:}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img084.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img084.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Radare2 can perform some automatic analysis of the binary that is helpful. Type ``aaa'' and hit enter to analyze
@@ -1195,13 +1193,13 @@ the binary. Sometimes, creators of binaries can mangle this and make analyzing m
 extremely big, this may take a few seconds. However, it is normally worth a shot.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img075.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img075.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Now type ``V'' then enter to open visual mode}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img076.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img076.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{output from v}
@@ -1210,7 +1208,7 @@ extremely big, this may take a few seconds. However, it is normally worth a shot
 different view for now. type ``p'' twice without hitting enter.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img077.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img077.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{This may be a little bit to take in if this is completely new to you so take a deep breath, but don't worry.
@@ -1219,7 +1217,7 @@ the display. The rows of 0x00000000's with labels are the registers of the compu
 view of the stack.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img027.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img027.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{For those new to assembly, registers are like variables for assembly. You can move data into and out of
@@ -1229,14 +1227,14 @@ rip is 0x7f3016a9bea0 and if we look at the code at the bottom panel we see this
 memory.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img078.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img078.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{The register rsp is used to point to the top of the stack. As you can see, the address in rsp is 0x7ffc2d515cf0
 which agrees with the highest stack address in the top view.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img079.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img079.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{To see where execution of the program actually begins type the colon : without hitting enter. Sometimes r2 is
@@ -1244,7 +1242,7 @@ glitchy and you may have to hit it twice. You should see a tab for command execu
 screen. Type ``db main'' and hit enter, then ``dc'' and hit enter again.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img080.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img080.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{main is the execution starting point of programs written in C and C++ for command line. the ``db'' command sets
@@ -1261,7 +1259,7 @@ breakpoint. or using a minus (-) in the ``db'' command. For example ``db -main''
 start of main.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img081.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img081.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Set breakpoints after each of the ``call'' instructions in main and you should see b's next to their
@@ -1269,7 +1267,7 @@ instructions. If you run ``dc'' now, you will see the execution of the program. 
 to the screen}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img082.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img082.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{output from the program that says Password Please}
@@ -1277,7 +1275,7 @@ to the screen}
 \textbf{running ``dc'' again opens a prompt for user input}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img085.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img085.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{running ``dc'' again will exit the program. At this point you can enter ``ood'' to restart the program. However,
@@ -1304,7 +1302,7 @@ basic assembly and hopefully will allow you to smoothly transition to other tuto
 \textbf{The first instruction is ``push rbp''.}
 
   
-\sitgfx[width=5.8335in,height=0.7035in]{FINALWORKINGDOCFORMERLYPRECURSOR-img086.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=0.7035in]{reversing-img086.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{The instruction pushes whatever data is in the register rbp onto the stop of the stack. Take a mental note of
@@ -1312,7 +1310,7 @@ the value held in the rbp register then hit ``s'' to step over this instruction 
 of the stack.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img087.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img087.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Next is the ``mov'' instruction. mov is short for move and takes two operands. Whatever is in the second operand
@@ -1327,7 +1325,7 @@ computer uses 16 symbols 0x0, 0x1, 0x2, {\dots} 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0x
 \textbf{The instruction ``mov rbp, rsp'' takes whatever value is in rsp (the top of the stack) and places it into rbp.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img088.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img088.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{shows the execution after mov rbp, rsp}
@@ -1419,7 +1417,7 @@ some\_amount'' will be executed. So lets see the three commands be executed at t
 \textbf{If you take a look at the bottom of the main function in radare2 you will see two instructions. leave and ret}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img089.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img089.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{These instructions are the ones that reverse the first three and return the stack frame to it's previous
@@ -1501,7 +1499,7 @@ string at that location. By calling sym.imp.puts after this instruction the comp
 please'' to the puts function, which prints it to the screen.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img090.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img090.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{After the program prints ``Password please'' it goes to accept input from the user. ``lea rax, qword [rbp -
@@ -1518,7 +1516,7 @@ function. Next, a 0 is moved into eax (which clears rax) and sym.imp.gets is cal
 sym.imp.gets'' and dc you will see ``Password please'' printed to screen.}
 
   
-\sitgfx[width=5.8335in,height=2.9654in]{FINALWORKINGDOCFORMERLYPRECURSOR-img091.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=2.9654in]{reversing-img091.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{If we open up a new terminal window and type ``man gets'' we can see the linux manual page for the gets
@@ -1529,7 +1527,7 @@ throw 16 B's and 16 C's. Place a breakpoint after the second call instruction th
 enter user input in the command tab.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img092.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img092.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{Show my input of many As in the command tab}
@@ -1539,7 +1537,7 @@ in the command window) and then use up and down to move through the stack. Hitti
 the instructions window.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img093.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img093.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Now if we hit dc again, we see our program crashes and returns signal 11. Lets rerun the binary and find the
@@ -1551,12 +1549,12 @@ return to, I look at the stack for where that address is relative to rbp.}
 
 \textbf{Here is at the end of main.}\newline
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img094.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img094.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{After stepping, we see the next instruction in memory.\newline
 }  
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img095.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img095.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Now, we know the exact location of our return address and can calculate it. If you want to do a quick
@@ -1565,7 +1563,7 @@ expression. Here I enter 0x70 to see it's decimal value but also you can enter i
 subtraction.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img089.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img089.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{After a little testing I find that inputting 0x78 A's followed by 6 B's exactly overwrites my return address.
@@ -1574,7 +1572,7 @@ after the 0x78 A's. If you scroll to the code above main's function in the binar
 you will notice a function labeled sym.never\_called(). I wonder who put that function there :).}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img096.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img096.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Currently, the address of never called is 0x564ea17e26ca. (Note that this address will be different for you and
@@ -1582,9 +1580,12 @@ will change each time you restart the program. You will have to check it's value
 If you try to directly paste this as a string into the radare input after ``Password please:'' you will find the
 program does not jump to the new function. The reason is the program is accepting input as a string. We need to enter
 the bytes directly into the input. There are two option to do this. The first option is to create a file with our input
-by opening up a new terminal window (cntrl shift t if you are using terminator) and entering echo -en
-``AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA564e17e26''
-{\textgreater} foo.txt}
+by opening up a new terminal window (cntrl shift t if you are using terminator) and entering}
+
+\begin{verbatim}
+echo -en "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA564e17e26" > foo.txt
+\end{verbatim}
 
 \textbf{the -en removes the newline from the echo command output and treats the input as bytes.}
 
@@ -1601,7 +1602,7 @@ If it is a different number besides 0 use that number. (You can see in the scree
 \textbf{Now, whatever bytes are stored in foo.txt will be entered as the input automatically in radare2.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img097.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img097.png}{fig:unk}{TODO CAPTION}
  \textbf{ }
 
 \textbf{The second option for entering input into radare2 is by pwntools from python. pwntools is a library full of
@@ -1611,14 +1612,14 @@ First open up two side by side terminal windows. In one type ipython to open up 
 ``from pwn import *{\textquotedbl} and ``p = process(`./BuffO\_1.out')''}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img098.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img098.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{now before you do anything more in python. open up radare with ``r2 -d pid'' where pid is the process id of the
 program you just ran in pwntools. (it will say the pid when it starts)}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img099.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img099.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{In the command tab seek to main using ``s main'' it is import that you do not type ``dc'' right now because
@@ -1626,7 +1627,7 @@ radare2 does not realize the process was already started by ipython. It does not
 located.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img100.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img100.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{entering s main after starting radare2}
@@ -1635,7 +1636,7 @@ located.}
 order to use this technique you have to put a breakpoint after where user input is accepted in a binary.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img101.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img101.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{show breakpoint after gets in main}
@@ -1644,7 +1645,7 @@ order to use this technique you have to put a breakpoint after where user input 
 waits for user input}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img102.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img102.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{show radare2 caught up with pwntools}
@@ -1654,7 +1655,7 @@ send data to the binary in ipython, we use p.send() or p.sendline(). Sendline wi
 character ``'' to the input we give it, which we need for this program since we had to hit enter for gets() to accept
 our input.}\newline
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img103.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img103.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Now when we hit enter to execute p.sendline() we will see radare2 hit a breakpoint after the gets function, and
@@ -1662,7 +1663,7 @@ our stack is full of A's. Notice how in python we could just type ``A''* 0x70 in
 around.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img104.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img104.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{Show how execution of sendline in pwntools filled stack with As}
@@ -1674,14 +1675,14 @@ to our string input in ipython. Try restarting the above commands for practice u
 but now add the postfix [::-1].}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img105.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img105.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{Now lets set another breakpoint at the ret instruction. Notice that the address is loaded in memory correct
 now.}
 
   
-\sitgfx[width=5.8335in,height=1.922in]{FINALWORKINGDOCFORMERLYPRECURSOR-img106.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=1.922in]{reversing-img106.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{Show correct memory address}
@@ -1689,13 +1690,13 @@ now.}
 \textbf{And we step again.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img107.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img107.png}{fig:unk}{TODO CAPTION}
  
 
 \textbf{And if all goes well, we jump to the beginning of our never\_called function.}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img096.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img096.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{Show the instruction pointer at the beginning of never called}
@@ -1703,7 +1704,7 @@ now.}
 \textbf{hit ``dc'' and you'll note that the program finishes with signal 11. Now go into ipython and enter p.read()}
 
   
-\sitgfx[width=5.8335in,height=3.6457in]{FINALWORKINGDOCFORMERLYPRECURSOR-img108.png}{fig:unk}{TODO CAPTION}
+\sitgfx[width=5.8335in,height=3.6457in]{reversing-img108.png}{fig:unk}{TODO CAPTION}
  
 
 \textit{Show output from p.read() instructions}
