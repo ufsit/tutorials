@@ -1,0 +1,437 @@
+\section{Reverse Engineering -- Static Analysis Walkthrough}
+
+\textbf{Static analysis is done to help you understand how the program should function before running it. The purpose of
+static analysis is to use the program flow and the assembly code to understand how the program should run and how to
+find out which sections are important and should be further analyzed. This is important because some programs use many
+jumps and blocks of code, and it is important to see how the program flows before jumping into debugging. On top of
+this, static analysis does not require a run-time environment, so it can be done from any machine. I use my faster Mac
+host instead of my boxes, but any operating system will work!}
+
+\textbf{To start, we will be statically analyzing a binary using a tool called IDA. IDA is seen as an industry standard
+for static analysis because it has tons of useful plugins, many different features, and even the ability to script with
+Python. However, this is why the professional version costs a few hundred thousand dollars. We will only be using some
+of the more simple and useful features for this tutorial, and all of these can be found in the free IDA demo that is
+provided.}
+
+\textbf{The program that we are analyzing is called
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{example}}\textbf{, and we plan on discovering what this
+program does. It was written in C and compiled with GCC with the m32 flag, for compatibility on 32 bit machines. Rather
+than showing you the C code that was used, we will use the program flow to determine the C code from the assembly
+language.}
+
+\textbf{To open a file in IDA, we will launch IDA. You will see a screen asking whether you would like to disassemble a
+new file, work on your own, or load a previous disassembly. This is your first time disassembling this file, so you
+will click the box that says ``New''. It will then present a box of options that affirms the format of the 32 bit ELF
+file. Make sure that IDA will auto-comment, and select ``OK'' to proceed. After some loading as IDA evaluates the
+program, you should get a screen that looks like the following:}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img045.png}{fig:unk}{TODO CAPTION}
+ \textbf{This is the graph mode of IDA, and it presents the functions as series of connected boxes presented as jumps.
+The other main view of IDA is known as the text view, and it presents all of the information as it is loaded into RAM.
+This is more confusing to read and involves the format of the ELF file and all of it's sections, so we will start by
+using Graph view. If you are not already in this view, press the spacebar to switch between these two main views.}
+
+\textbf{In this view, there are a few key features to look at for this program. On the left, there is an area for the
+functions, known as the ``functions window''. In this, all of the functions that are used in the binary can be seen.
+However, the majority of them are functions used by GCC and by the stdio.h file that is imported. This can be
+determined by the functions with the purple shade, like \_strcmp, \_gets, \_puts, \_strlen, and libc\_start\_main.}
+
+\textbf{It is important to determine which functions are used because they can indicate how the program works. In this
+case, we can guess that two strings are compared due to the strcmp method, and that we will give input with gets and
+see output with puts. The strlen could be used to find the length of a string that we enter or a string that is
+hardcoded in memory. All of the other functions that are used take a part in making sure that the ELF can run
+independently, and they help link all of the parts of the file and libraries together in virtual memory. This is a
+complicated process, but luckily these functions don't affect the flow of the program that we can affect.}
+
+\textbf{On top of this, it is always helpful to look at the strings that can be found in the program before we analyze
+further. IDA can look for areas in memory in which a series of consecutive memory falls into the printable range of
+ASCII. In other words, it looks through the whole file for strings of words and numbers that may end up being printed
+on the screen or used in various functions. To open this view, click on ``Views'' in the toolbar, then ``Open
+subviews'' and ``Strings''. The keyboard shortcut for the strings subview is Shift-F12. Once you open the strings
+subview, you should see the following screen:}
+
+  
+\sitgfx[width=6.1252in,height=3.8335in]{reversing-img046.png}{fig:unk}{TODO CAPTION}
+ \textbf{Most of these strings are function names, and they are linked to the libc functions that we import in the
+stdio.h file that I previously mentioned. These all have an address that begins with LOAD, as can be seen. This means
+that they are used when the program loads libc and imports the functions and references that will be used. After these,
+there are 5 strings that stand out. The last string is stored in the eh\_frame, as can be seen in its address, and it
+comes from the exception handling part of the ELF file, so it is not relevant in the execution that we can see. By now,
+you can probably see that ELF files and other executables are way more complicated than they seem in the C code that is
+used to create them, and IDA shows all of the sections used by the compiler to make sure that this code can run in the
+computer and load into its RAM properly. It's a very intricate and entertaining process, but it is usually not too
+important when reverse engineering. I would not recommend affecting any of this data because it could destroy the
+program, for all practical purposes.}
+
+\textbf{Now let's look at the 5 strings that seem interesting. The first says, ``If you managed to get here, you used an
+exploit!'' That sounds like a place in the program that is not meant to be reached and can only be reached with an
+exploit, but we are not focused on exploitation yet. I will reference that later in this tutorial, after understanding
+the basic flow and how to reverse engineer the program in the way that it is supposed to function. The second string
+says, ``Please enter the password:''. This seems like a prompt that would be printed before we give input. The third
+strings says, ``itisnotthiseasy''. That one seems confusing, but it may be useful. The fourth string says, ``Correct!''
+We can assume that this is the part of the program that we would like to reach, because you may assume that this
+relates to the password that it asks us to enter. The fifth string seems like the other possibility, as it states,
+``Mission failed, we'll get them next time''. You may have noticed that all of these have addresses that begin with
+``.rodata'', which stands for ``read only data.'' This means that these strings can only be read by the program, and
+they are located in an area of memory that cannot be written to or executed. Now, it is time to check out the flow!}
+
+\textbf{Click on ``IDA View-A'' in the list of tabs to go back to the graph view. Now we will read through the graph and
+attempt to understand what the program should do. Starting from the top box, a few definitions are created for you by
+IDA. The local variables and labelled ``var\_10'' and ``var\_C''. These variables are created and used inside of this
+function. They are stored in lower memory addresses than EBP, so IDA can recognize that a repeated negative offset from
+EBP indicates a local variable in memory. The arguments are labelled ``argc'', ``argv'', and ``envp'', and they have
+positive offsets from EBP. You may recognize these because they are commonly referred to in C programs where the main
+function has command line arguments. However, you can look through the graph to find out where any of these arguments
+are referenced, and it can be seen that they are only declared and never used. On top of this, ``s'' is defined, and
+IDA commonly uses the offset ``s'' to refer to strings. In the first block everything up to ``lea'' is used to set up
+the stack and position the memory, so this can be better analyzed in dynamic analysis. }  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.4583in,height=2.4791in]{reversing-img047.png}{fig:unk}{TODO CAPTION}
+ \textbf{Once we reach the lea, knowledge of x86 assembly language becomes incredibly important. I always try to keep a
+reference manual at hand in case I do not recognize an instruction, but Google often turns out to be the biggest help.
+Lea stands for ``load effective address'', so it pretty much functions as a way to store a pointer. In this case, the
+pointer for some offset of register ebx is stored in register eax, and luckily IDA simplified life by displaying the
+string that is at that section of data. The pointer to this string is stored in register eax, and the next instruction
+``push''es this pointer onto the stack. After this, the ``puts'' call is performed, in which the puts function of the
+stdio.h library is called. The libc manual says that ``puts'' takes one argument, a string pointer, and it prints this
+memory to standard out, or the screen. IDA recognized that eax was on top of the stack and commented that the value in
+eax is the argument passed to the puts call. Any blue phrase that begins with a semicolon in IDA is an indication of an
+argument for the next mentioned function call. We have already determined that eax held the pointer the string ``Please
+enter the password:'', so this string must be printed!}
+
+\textbf{ \ \ After this, 10h (10 in hex) is added to esp to move the stack to clear the frame created for the puts call,
+and then 0Ch is subtracted to make room for the next call. Don't worry about not understanding how the stack works too
+much in this tutorial because it is much easier to visualize in dynamic analysis, and it is not worth stressing about
+or getting caught up on. However, it is helpful to change the 10h and 0Ch into decimal to be more easily read. To do
+this, select the green text for either number and type ``H''. This will convert from hexadecimal to decimal format, and
+it is now much easier to read. Now, let's look at the next function call. The address of ebp+s is loaded into eax, and
+then eax is pushed. After this, gets is called. We know that gets uses one argument, which is the pointer to the area
+in memory in which the string is to be stored. Now we know that location ``s'' is where our string that we input is
+stored. This must be out ``password''!}
+
+\textbf{ \ \ For the next function call, the address of our password is loaded again into eax and pushed before strlen
+is called. This must determine the length of the string that we input. After the stack pointer is added again, a mov
+instruction is used. This instruction moves the value stored in one register or area of memory into another. IDA uses
+Intel syntax, so you read it from right to left. The value of eax is moved into ebp+var\_10, and eax is the standard
+register for return value. This means that var\_10 is our string length! Let's rename it! To do this in IDA, click on
+the green ``var\_10'' and type n. We will name it input\_length. Once you do this, you will realize that all occurences
+of ``var\_10'' have been replaced with ``input\_length''. 0 is moved into var\_C, so we do not know what it's function
+is yet. After this, jmp is used to reference an unconditional jump, and we leave the box. Boxes in IDA end with jumps
+or endpoints.}
+
+\textbf{ \ \ In the next box, var\_C is moved into eax, and this is compared with input length, and if it is less, the
+green jump is taken. Decisions are being made, which seems scary! But don't worry, there are only two options for the
+flow at this time. The first time, unless no input is given, 0 must be less than the size. This means we will follow
+the green arrow to the next box. }  
+\sitgfx[width=2.5937in,height=2.3335in]{reversing-img048.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{We will approach this section like we did with the previous boxes. At first, the pointer of the string is loaded
+into edx, and var\_C is moved into eax. These are added together and stored in eax (remember, we read from right to
+left for Intel and IDA uses Intel syntax). Now let's look at all that we did so far and try to represent it in C code:
+var\_C = var\_C + s*. The next instruction looks ugly, but we can tell that it involves moving. The byte referenced to
+by the pointer at eax is moved into eax, and an Intel manual shows that the upper 3 bytes of register eax are zeroed.
+Then, 1 is added to eax, and the contents of register eax are moved into ecx. This is confusion, but we will go back to
+this and why it happens. Then, the address of string s is loaded into edx and var\_C is moved into eax again, and they
+are added together and stored into eax again. After this, register cl (the least significant byte of register ecx) is
+moved into the memory referenced to by eax, and then var\_C is incremented.}
+
+\textbf{Hmm, if var\_C is incremented each time, starting at 0 and ending at the length of the string, this seems like a
+for loop. Indeed, in the C code this was a for loop! We can rename var\_C ``counter'' to simplify our reading. To
+understand what the box we just read does, it helps to know that a character is one byte in size. From the first half
+and the C code that we created, we can tell that the pointer to each character consecutively in the loop is loaded into
+eax, and then a byte at that location is moved to eax. This must be the characters, from the first character we enter
+to the last! Then, 1 is added to this value, so the character at that value is incremented. After this, the code
+repeats and our C code line that we created is used again to reference the location of the character. However, the
+character in ecx is moved back into memory. This means that the characters are each incremented, starting with the
+first and ending with the last! It may seem tricky at first, but the ability to recognize loops and recognize the
+traversal of arrays becomes more natural with time. If you are confused you should read again after knowing the
+outcome, it may make more sense.}
+
+\textbf{Now that we have traversed the word, we can follow the red arrow.}
+
+  
+\sitgfx[width=6.4898in,height=3.948in]{reversing-img049.png}{fig:unk}{TODO CAPTION}
+ \textbf{Firstly, the pointer to the string ``itsnotthiseasy'' is loaded into eax, which is then pushed onto the stack.
+This is referenced to as argument s2. The string in memory that we entered and that had each character incremented by 1
+is then loaded into eax and pushed onto the stack as argument s1, and strcmp is called. This compares the two strings,
+returning 0 if they are equal and other numbers if they are not. Test eax, eax tests to see if the value in eax is zero
+or not. If it is zero, it sets a special zero flag. If this zero flag is not set, the green arrow is taken, and the
+string ``Mission failed, we'll get them next time.'' is printed. This is a long string, so you can double click
+``aMissionFailedW'' to go to that section of memory and read the whole string.}  
+% Unhandled or unsupported graphics:
+\sitgfx[width=6.5in,height=0.6563in]{reversing-img050.png}{fig:unk}{TODO CAPTION}
+ \textbf{27h is used to refer to the single quote because that is it's ASCII value and it is a special character in this
+case. This allows it to be used in the string even if it is used to denote the start or stop of a string here. To go
+back to the previous part, click on the back facing arrow above the function list.}
+
+  
+\sitgfx[width=4.1252in,height=2.1772in]{reversing-img051.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+This example of stepping backwards in our analysis can also be seen as a usage of a cross reference. A cross reference
+is a location in the program in which this function or string is called and used, and it can be a useful way of finding
+when functions and strings are used in the flow of the program. To find the cross references to this string, you can
+right click on it and select ``List cross references to.'' This can also be done with the keyboard shortcut ``ctrl-x''.
+When you do this, you should see the following:}
+
+  
+\sitgfx[width=6.4898in,height=1.6043in]{reversing-img052.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{This is the location in the graph in which we found this string, because it was the code that loaded the pointer
+to the string into register eax! Double click this to go back to the graph view of our function, and we can continue
+from there.}
+
+\textbf{ \ \ The final block helps end program execution by loading 0 into eax and popping all of the variables off of
+the stack. The 0 in eax is a standard in programming to represent no errors in execution, and it is used because in C
+programs, the main method is forced to return an integer as it is declared ``int main()''. We have statically analyzed
+the whole program!}
+
+\textbf{ \ \ Now, let's look at the bigger picture. We give a password to the program, every character is incremented by
+1, and then it is compared to the string ``itsnotthiseasy.'' To do this successfully, we should decrement all of the
+characters of ``itsnotthiseasy'' to get the correct password! This password would be
+``hsrmnssghrd{\textasciigrave}rx'', as can be seen on an ASCII chart. We cannot test during static analysis, but we can
+try to understand what should happen and what we would expect to happen. This makes dynamic analysis easier because we
+know what to try and which parts to check.}
+
+\subsection{Dynamic Analysis}
+
+\textbf{We will use radare2 as a tool to dynamically analyze the program now. While IDA has some debugging features,
+radare2 (commonly referred to as r2) has tons of features to view the variables and stack as you debug a binary, and it
+is incredibly helpful in understanding what happens as a binary runs.}
+
+\textbf{One easy way to get to a point in a binary is by manipulating the jumps. Sometimes, it does not matter what you
+enter because you can change the register values later on to reach your goals. We will load the binary example into
+radare2 and seek to main.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img053.png}{fig:unk}{TODO CAPTION}
+ \textbf{Now, recall the IDA graph that we analyzed, and remember that the final jump to either correct or failure.
+Before this jump is taken, the ``test eax, eax'' instruction is used to determine if the value in eax is zero or not,
+setting the zero flag. Use the arrows to scroll through the main function in radare2 and set a breakpoint at the ``test
+eax, eax'' instruction. Now, continue and hit this point.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img054.png}{fig:unk}{TODO CAPTION}
+ \textbf{We will change the value in the register eax to be zero. This way, the JNE instruction (jump if not equal to)
+will evaluate to false and not be taken. This should print the affirmative response. To do this, type ``:dr eax=0''.
+You can see the value of the eax register change to 0. }  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img055.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{After you do this, step twice to see if the jump is taken or not. You will see that the jump is not taken! By
+changing the value in the register you have beaten the challenge! Continue execution to see that you won.}
+
+\textbf{Wait, is it also possible to change the instructions? Yup! This time we will change the JNE instruction into a
+NOP, and this will make sure that the jump is not taken and the program flows into the correct section of the program.
+To do this, you will load example into radare2 and seek to main. Then, you will scroll through main until the ``jne
+0x56624689'' instruction is at the top of the code. Then, you can use ``c'' to go to cursor mode, and tab twice to put
+the cursor in the code. Use the arrow keys to put the cursor on the opcodes of the instruction that you want to edit.
+Now, type ``a'' and you will be prompted to enter assembler opcodes.  You will write two NOP instructions (0x90) in the
+place of the jump not equal instruction.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img056.png}{fig:unk}{TODO CAPTION}
+ 
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img057.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{We use two because a NOP is one byte and a JNE is 2 bytes in length. A NOP instruction stands for ``no
+operation'', and the code execution flows through these NOP instructions without changing anything except for the eip.
+This is called patching, and it is used to change the flow of programs and redirect execution to wherever you want.
+Doing this in radare2 in debug mode will not change this permanently, however, so you can test anything that you want
+without having to worry about ruining your binary! As you run the program, you can put any input and still reach the
+correct component of the program.}
+
+\textbf{Now, we will put this binary into a different context. Let's say that this is a challenge and the flag is the
+password that we input. Now, the input actually matters, so we must find out what the password should be. Open the
+binary example in radare2 and seek to main. Here we can see the gets, puts, strlen, and strcmp functions that were seen
+in IDA as they are called. They are highlighted into a light green color at the default color setting to stand out as
+functions that are called.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img053.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{In order to see what the puts function is doing, let's put a breakpoint after puts and debug continue until that
+point. After doing this, you will see the phrase ``Please enter your password: ``, which shows the string that the puts
+call used from the stack as an argument}
+
+\textbf{The string was located at the address [ebx-0x189f]. The square brackets dereference the value inside them in x86
+assembly. So if ebx was 0x55555555 then [ebx] would tell what is stored at the address 0x55555555 instead of the
+location itself. To display the string at other times during execution before ebx is changed, you can print the string
+in the memory at this location using the command ``pxw 0x20 @ ebx-0x189f''. Note that the pxw dereferences the argument
+given to them automatically. So to see the value at ebx use ``pxw 0x20 @ ebx'', not ``pxw 0x20 @ [ebx]''. Pxw stands
+for print hexadecimal (x) word. A word is 4 bytes in length. }
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img058.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{After this, we know that the gets function takes user input because it is a commonly used libc function. To find
+out what the purpose of a libc function like gets is, you should use the command ``man gets'' in the command line in a
+new terminal window. You should notice that the man page warns the user that gets is an insecure function to use.
+Looking back before the gets function is called, we see that the value ebp-0x24 is loaded into eax and pushed to the
+stack. This means that the local variable ebp-0x24 is the first argument to gets, and the location of the local
+variable where our input is stored. This can be determined by the man page for gets as the first argument, so it is
+always a good idea to use the man pages for unknown libc functions. Single step to the call.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img059.png}{fig:unk}{TODO CAPTION}
+ 
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img060.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Right now, you should use shift s to step over the gets call. This is important because the code for the gets
+function is long and complicated. If there is an issue and you land inside of a function like gets and just want to
+return to the previous function, use the command dcr to continue until the next ret instruction. Instead of this, you
+can use s main to seek back to main, and you can set a breakpoint after gets returns. Then, dc should return you to
+this point.}
+
+\textbf{Now let's print 20 bytes, as words, at the location ebp -- 0x24 to check that our input is stored there. After
+this, let's try to find the precise location that the input is stored at. To do this, you can use the command ``? ebp
+-- 0x24''. The second value shown is the hexadecimal formatted address for this value. As you can tell, this is the
+same value as eax, which shows that the gets function returns the value of the pointer to the input.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img061.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Note that the same ebp-0x24 value is the argument to sym.imp.strlen. place a breakpoint after the call to strlen
+and debug continue. Note that after the call, the value in eax is 0x10 (which is 16, not 10). The this value is place
+into the stack variable ebp-0x10. On the left side of the screen, you'll see two arrows. These show that the program
+execution will be jumping up and down the instructions here. If you look at the bottom jump command, you notice that
+the compare jumps if the value in ebp-0xc is lower then the value in ebp-0x10. So this loop will probably count upwards
+by one until it reaches the length of our string.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img062.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Looping at the code inside the loop, we see that the loop takes the address of our string and counts upward
+through each letter in the string, and adds one to the ascii value in each letter (so `h' becomes `I', `a' becomes `b',
+`b' becomes `c').}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img063.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Next we see that the binary is calling a string compare. Let's see what is being compared to our input.}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img064.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Well, now we think we may know what the password entered should be. Now, I'll reset the instruction pointer to
+the beginning of main by executing dr eip = 0x565fd5dc. (This address may be different for you on your computer.)}
+
+\textbf{To solve the crackme, we will use a python script. We know that the solution should involve every character of
+itsnotthiseasy that is decremented by one. The python script is as follows:}
+
+  
+\sitgfx[width=6.5in,height=4.0626in]{reversing-img065.png}{fig:unk}{TODO CAPTION}
+ 
+
+\subsection{Tips and Tricks}
+
+\textbf{ \ \ Now that you have gone through a normal static analysis workflow, you can tell that this could become
+incredibly time consuming very quickly. However, there are tons of little tricks that can save you time. Many
+constructs are used in similar fashions throughout many C programs, like the way that all for loops are recognizable
+for their arrows backwards to previous boxes and a register or variable incrementing. To help you see this, I created a
+C program that involved many different data types and control flows. This is similar to a great video I watched by a
+Youtuber known as Live Overflow, so I want to make sure to give credit to him and his ideas. I highly recommend that
+you watch his binary exploitation series. Because this is not as much about reversing a program without source code, I
+provided the source code  for the program. It is in the c\_constructs.c file, which you should have open next to IDA as
+you analyze.}
+
+  
+\sitgfx[width=3in,height=4.1252in]{reversing-img066.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{To help you understand what the size is of each character, you can see what kind of memory location they are
+stored in. A dword, or double word, is a memory location that is 4 bytes in length. A qword, or quad word, is a memory
+location that is 8 bytes in length. As you can tell from the various pointers to memory location, all of which were
+created for local variables, all are stored in dwords, qwords, or bytes. The most common of these that you will see are
+characters in strings and integers. The character is always represented as a byte, and integers and stored as dwords in
+memory. Because of this, if you see bytes being used and referenced frequently in a program, you could infer that
+strings and characters are probably being used. If there are dwords being used in a password checking program, it is
+more likely that it is some sort of passcode with numbers.}
+
+  
+\sitgfx[width=6.4898in,height=3.802in]{reversing-img067.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{This is an example of a for loop. The variable labelled ``var\_40'' is the counter that loops through the for
+loop. When you look quickly at a loop like this, you can tell that this is a loop because of the blue arrow that points
+upwards to the box at loc\_563. Also, you can tell that it's a for loop that increments from 0 to 9 because the initial
+instruction is ``mov [ebp+var\_40], 0''. Then, it is compared against 9 after being moved into edx, and it is
+incremented in the box on the bottom left of the picture above. All of these can be seen by reading through the
+assembly language line by line, but looking at the boxes before and after the arrow that goes upwards can reveal a ton
+about the functionality.}
+
+  
+\sitgfx[width=6.5in,height=3.9374in]{reversing-img068.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Here are two other loop examples. The loop on the right is taken first because var\_40 is still 10 from the
+previous for loop. Here a while loop is used, which can somewhat be seen by the way that 2 was added to edx instead of
+1, but for loops can use increments of 2 as well. You can definitely tell that it is a loop because of the arrow
+pointing upwards, and it isn't quite the same as the for loop from before. Then, the box on the left is a do while
+loop. This can be seen because of the arrow pointing upwards into the same box. Also, the instructions that start with 
+{}``f'' indicate floating point instructions, and these are used when floats or doubles are used in computations.}
+
+  
+\sitgfx[width=6.4898in,height=0.6252in]{reversing-img069.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{A switch can be easily distinguished by the long row of boxes. All of these boxes are aligned and are referenced
+from the same box above them. Also, I can identify switches often based on the fact that they are reached by a ``jmp
+eax'' instruction rather than a jump based on the comparison of values. Many different values can be stored in eax, and
+these pointers can be used based on the case of the switch.}
+
+  
+\sitgfx[width=2.8646in,height=1.2083in]{reversing-img070.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{When a function is called in this program, the add function, the arguments are pushed onto the stack in reverse
+order. This is a normal calling convention for C, and it is called the cdecl convention. This stands for ``C
+declaration'', and it is used in most C programs that are compiled on a Unix system as ELF files. All of the programs
+that we have reversed so far have used the cdecl convention, like the main methods in this program and in the previous
+example program. What happens in these is that the arguments are pushed in reverse order after space is created for
+these, and then they are located in higher memory than the stack pointer esp once the function is called and the new
+stack frame is created. }
+
+  
+\sitgfx[width=3.3646in,height=3.7602in]{reversing-img071.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{In the called function, the new frame is created without subtracting esp at all. This is because no new
+variables were created in this function, and the return value was put into eax. This is a standard convention in
+assembly language, so you can safely assume for most conventions that eax holds the return value for the previously
+called function until anything else is placed in the register.}
+
+  
+\sitgfx[width=6.5in,height=4.5311in]{reversing-img072.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Here you can see how the hardcoded array is placed into memory. All of the integers are placed into memory
+locations located next to each other, within 4 bytes of each other. This helps in traversing the array because the
+elements are all 4 bytes away from each other. An important line here is ``mov [ebp+eax*4+var\_58], edx''. This helps
+locate each element in the array because the first element of the array is located at ebp+var\_58. Then, the eax times
+4 helps traverse from one element to the next based on the value of eax, starting with eax equal to 0. After this, a
+string is hardcoded into the array based on the ascii values in reverse order, known as little endian order. Also, as
+we mentioned the return values for functions, a value of 0 is moved into eax to indicate that the program was able to
+exit without any error!}
+
+\textbf{The best way to learn reverse engineering, especially static analysis, is by creating your own programs with
+strange and unique constructs and seeing how the graph in IDA reflects your functions. Knowledge of loops and
+conditions makes this much easier, but there are many ways in which different algorithms and functions could be
+represented. To practice your reverse engineering skills and learn how program control flows in various ways, I have
+provided a famous bomb lab from Carnegie Mellon University. This would be tested by running it or using dynamic
+analysis, but you can use static analysis to read each phase and understand how they work. The most important thing is
+to be patient, keep an x86 manual nearby, and make sure to look at the bigger picture!}

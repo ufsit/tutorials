@@ -1,0 +1,108 @@
+\section{Why do we Reverse?}
+\textbf{Reverse Engineering in infoSec, as simply as we can put it, is to take a
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{binary, }}\textbf{which is just }
+
+\textbf{another word for a computer program, and figure out what it's trying to do. You run binaries all the time in day
+to day life - when you run your browser, when you run Microsoft Word, when you check the weather on your phone. Every
+time you run a program or application, a binary file made of 1s and 0s tells your device exactly what it needs to do.
+\newline
+\newline
+If you have written code before, you know that before it can do anything, you have to turn that into a program/binary so
+that you can use it. Before that your code is just a useless file. But what if you want to know what's happening under
+the covers when you use Word, or Chrome, or anything else running on your computer? This is done only by Reverse
+Engineering.  \newline
+\newline
+Let's start up our Kali Linux and write up our own code get a better idea. The Linux terminal allow you to access most
+of the applications in your environment from the command line. For windows users, it is equivalent to the command
+prompt application (cmd). Access your terminal by searching ``Terminator'' in the Activities section of the toolbar
+}or\textbf{ selecting the red icon on the dash that looks like }
+\includegraphics[height=0.2689in]{reversing-img001.png}
+ \textbf{. Here you should see a window open with your current user and location in the file system.\newline
+}
+
+\subsection{Programming and Compiling Hello World}
+
+{\centering
+\sitgfx[width=6.5in,height=1.778in]{reversing-img002.png}{fig:unk}{TODO CAPTION}
+ \par}
+\textbf{Here you can see my terminal open on the machine name(kali:\~{} root\#), kali, as user root, with \~{} symbol
+letting me know I am in the home directory. Pressing Ctrl+L will clear the screen for me whenever I need.\newline
+}
+
+\textbf{Let's start by writing a simple ``hello world'' program in the C programming language. You can use any text
+editor you like, but I'll use }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{Leafpad }}\textbf{cause it's
+simple.\newline
+Type in terminal:}\textit{ leafpad hello.c\newline
+\ \ }  
+\sitgfx[width=4.8693in,height=3.1602in]{reversing-img003.png}{fig:unk}{TODO CAPTION}
+ \textbf{ }
+
+\textbf{This opens a text editor for me to write my program in. So let's do that. Write it yourself, even if you are not
+good at C I suggest you learn enough to do this so you understand what each line does. Your code should look like
+this:}
+
+\textbf{\newline
+\ \ }  
+\sitgfx[width=4.3854in,height=1.302in]{reversing-img004.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Now let's turn our code into a binary(which will be 32-bit, not 64, for reasons later explained).}
+
+  
+\sitgfx[width=6.5in,height=0.5555in]{reversing-img005.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+Listing (ls) the content in our file location now shows two hello files: \newline
+{}-hello.c: our C source code\newline
+{}-hello\_binary: our binary created from our source file\newline
+\ \ }  
+\sitgfx[width=4.7602in,height=0.6146in]{reversing-img006.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{Running (./) hello\_binary achieved our objective, outputting the string we printed}
+
+\textbf{What happens when the }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{compiler}}\textbf{, a program
+that interprets source code and outputs machine code, interprets our source code? Basically, A's and B's go through a
+process and become 1's and 0's that make it possible for your processor (CPU) to understand. In fact, it's a little
+less abstract than simply 1's and 0's. More on that later. }
+
+\textbf{The compiler goes through your source, line by line, and tries to figure out what you meant. It turns your
+source code into }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{instructions}}\textbf{, or specific tasks
+for your CPU to execute. You can't tell your CPU ``x = 5'' so your compiler of choice will tell it a series of
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{instructions }}\textbf{that represent ``x=5''.}
+
+
+\subsection{We don't always get source code with our programs.}
+
+\textbf{\newline
+So what would happen if I deleted the source code for hello.c and renamed the binary? Would you have a clue what this
+program even does until running it? And even then, your understanding of this program will be based on just the
+behavior you can see when doing so. It is this fact that allows products like Chrome and Word to be shared to you
+without making it easy for you to figure out EXACTLY how it works and sell your new product based off of this
+information.  But there is still a way see what's inside for those who have the skill. Enter Reverse
+Engineering...\newline
+\newline
+{}-How would we see how it works? The }\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{file }}\textbf{command
+gives us some basic information about the file hello\_binary. ELF = Executable and Linkable Format. An .exe on Windows
+is functionally equivalent to an ELF on Linux. The other thing to note on the output of
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{file}}\textbf{ is the phrase ``Intel 80386'' which is the CPU
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{architecture, }}\textbf{aka the physical hardware that this
+program was compiled to run on. More specifically, 32-bit, which refers to the size of the
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{registers }}\textbf{of said CPU(more on those in a bit).}
+
+\textbf{ }  
+\sitgfx[width=6.5in,height=0.6252in]{reversing-img007.png}{fig:unk}{TODO CAPTION}
+ 
+
+\textbf{So that's cool, but what else is in this program? The
+}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{strings }}\textbf{command lists all of the human-readable
+strings in the binary of length 4 or greater. \newline
+}  
+\sitgfx[width=6.5in,height=3.5138in]{reversing-img008.png}{fig:unk}{TODO CAPTION}
+ \textbf{\newline
+We'll note that there are a lot of strings for such a tiny program! About 3 quarters of the way down, note our string
+``hello world!'' from the source code. The compiler and version we used are a little bit below it. A lot of these
+results are actually just to are left from the compilation process. We used the function ``printf'' which on linux is a
+member of}\textbf{\textcolor[rgb]{0.21960784,0.4627451,0.11372549}{ glibc}}\textbf{ (the standard library for C
+programs on Linux). So, the compiler had to bring in glibc in order to know what we meant by printf, hence all the
+glibc/libc related strings.
+}
